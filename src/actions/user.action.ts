@@ -17,7 +17,28 @@ export async function syncUser() {
 			},
 		});
 
-		if (existingUser) return existingUser;
+		if (existingUser) {
+			// Check if any user information has changed
+			const hasChanges =
+				existingUser.name !== `${user.firstName || ""} ${user.lastName || ""}` ||
+				existingUser.username !== (user.username ?? user.emailAddresses[0].emailAddress.split("@")[0]) ||
+				existingUser.email !== user.emailAddresses[0].emailAddress ||
+				existingUser.image !== user.imageUrl;
+
+			if (hasChanges) {
+				// Update the existing user with new information
+				await prisma.user.update({
+					where: { clerkId: userId },
+					data: {
+						name: `${user.firstName || ""} ${user.lastName || ""}`,
+						username: user.username ?? user.emailAddresses[0].emailAddress.split("@")[0],
+						email: user.emailAddresses[0].emailAddress,
+						image: user.imageUrl,
+					},
+				});
+			}
+			return existingUser;
+		}
 
 		const dbUser = await prisma.user.create({
 			data: {
