@@ -71,7 +71,7 @@ export async function getUserByClerkId(clerkId: string) {
 	});
 }
 
-export async function getDbUserId() { 
+export async function getCurrentUserId() { 
 	const { userId: clerkId } = await auth();
 	if (!clerkId) return null;
 
@@ -85,7 +85,7 @@ export async function getDbUserId() {
 
 export async function getRandomUsers() {
   try {
-    const userId = await getDbUserId();
+    const userId = await getCurrentUserId();
 
     if (!userId) return [];
 
@@ -129,7 +129,7 @@ export async function getRandomUsers() {
 
 export async function toggleFollow(targetUserId: string) {
   try {
-    const userId = await getDbUserId();
+    const userId = await getCurrentUserId();
 
     if (!userId) return;
 

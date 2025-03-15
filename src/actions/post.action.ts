@@ -1,12 +1,12 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { getDbUserId } from "./user.action";
+import { getCurrentUserId } from "./user.action";
 import { revalidatePath } from "next/cache";
 
 export async function createPost(content: string, image: string) {
   try {
-    const userId = await getDbUserId();
+    const userId = await getCurrentUserId();
 
     if (!userId) return;
 
@@ -81,7 +81,7 @@ export async function getPosts() {
 
 export async function toggleLike(postId: string) {
   try {
-    const userId = await getDbUserId();
+    const userId = await getCurrentUserId();
     if (!userId) return;
 
     // check if like exists
@@ -146,7 +146,7 @@ export async function toggleLike(postId: string) {
 
 export async function createComment(postId: string, content: string) {
   try {
-    const userId = await getDbUserId();
+    const userId = await getCurrentUserId();
 
     if (!userId) return;
     if (!content) throw new Error("Content is required");
@@ -196,7 +196,7 @@ export async function createComment(postId: string, content: string) {
 
 export async function deletePost(postId: string) {
   try {
-    const userId = await getDbUserId();
+    const userId = await getCurrentUserId();
 
     const post = await prisma.post.findUnique({
       where: { id: postId },

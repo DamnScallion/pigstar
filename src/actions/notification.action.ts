@@ -1,11 +1,11 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { getDbUserId } from "./user.action";
+import { getCurrentUserId } from "./user.action";
 
 export async function getNotifications() {
   try {
-    const userId = await getDbUserId();
+    const userId = await getCurrentUserId();
     if (!userId) return [];
 
     const notifications = await prisma.notification.findMany({

@@ -16,13 +16,13 @@ import { Textarea } from "./ui/textarea";
 type Posts = Awaited<ReturnType<typeof getPosts>>;
 type Post = Posts[number];
 
-function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
+function PostCard({ post, currentUserId }: { post: Post; currentUserId: string | null }) {
   const { user } = useUser();
   const [newComment, setNewComment] = useState("");
   const [isCommenting, setIsCommenting] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [hasLiked, setHasLiked] = useState(post.likes.some((like) => like.userId === dbUserId));
+  const [hasLiked, setHasLiked] = useState(post.likes.some((like) => like.userId === currentUserId));
   const [optimisticLikes, setOptmisticLikes] = useState(post._count.likes);
   const [showComments, setShowComments] = useState(false);
 
@@ -35,7 +35,7 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
       await toggleLike(post.id);
     } catch (error) {
       setOptmisticLikes(post._count.likes);
-      setHasLiked(post.likes.some((like) => like.userId === dbUserId));
+      setHasLiked(post.likes.some((like) => like.userId === currentUserId));
     } finally {
       setIsLiking(false);
     }
@@ -99,7 +99,7 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
                   </div>
                 </div>
                 {/* Check if current user is the post author */}
-                {dbUserId === post.author.id && (
+                {currentUserId === post.author.id && (
                   <DeleteAlertDialog isDeleting={isDeleting} onDelete={handleDeletePost} />
                 )}
               </div>

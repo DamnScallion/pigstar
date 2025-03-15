@@ -39,7 +39,7 @@ interface ProfilePageClientProps {
   posts: Posts;
   likedPosts: Posts;
   isFollowing: boolean;
-  dbUserId: string | null;
+  currentUserId: string | null;
 }
 
 function ProfilePageClient({
@@ -47,7 +47,7 @@ function ProfilePageClient({
   likedPosts,
   posts,
   user,
-  dbUserId,
+  currentUserId,
 }: ProfilePageClientProps) {
   const { user: currentUser } = useUser();
   const [showEditDialog, setShowEditDialog] = useState(false);
@@ -205,7 +205,7 @@ function ProfilePageClient({
           <TabsContent value="posts" className="mt-6">
             <div className="space-y-6">
               {posts.length > 0 ? (
-                posts.map((post) => <PostCard key={post.id} post={post} dbUserId={dbUserId} />)
+                posts.map((post) => <PostCard key={post.id} post={post} currentUserId={currentUserId} />)
               ) : (
                 <div className="text-center py-8 text-muted-foreground">No posts yet</div>
               )}
@@ -215,7 +215,7 @@ function ProfilePageClient({
           <TabsContent value="likes" className="mt-6">
             <div className="space-y-6">
               {likedPosts.length > 0 ? (
-                likedPosts.map((post) => <PostCard key={post.id} post={post} dbUserId={dbUserId} />)
+                likedPosts.map((post) => <PostCard key={post.id} post={post} currentUserId={currentUserId} />)
               ) : (
                 <div className="text-center py-8 text-muted-foreground">No liked posts to show</div>
               )}
