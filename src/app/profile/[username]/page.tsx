@@ -6,6 +6,7 @@ import {
 } from "@/actions/profile.action";
 import { notFound } from "next/navigation";
 import ProfilePageClient from "./ProfilePageClient";
+import { getDbUserId } from "@/actions/user.action";
 
 export async function generateMetadata({ params }: { params: { username: string } }) {
   const user = await getProfileByUsername(params.username);
@@ -18,22 +19,24 @@ export async function generateMetadata({ params }: { params: { username: string 
 }
 
 async function ProfilePageServer({ params }: { params: { username: string } }) {
-  const user = await getProfileByUsername(params.username);
+  const profileUser = await getProfileByUsername(params.username);
 
-  if (!user) notFound();
+  if (!profileUser) notFound();
 
   const [posts, likedPosts, isCurrentUserFollowing] = await Promise.all([
-    getUserPosts(user.id),
-    getUserLikedPosts(user.id),
-    isFollowing(user.id),
+    getUserPosts(profileUser.id),
+    getUserLikedPosts(profileUser.id),
+    isFollowing(profileUser.id),
   ]);
+  const dbUserId = await getDbUserId();
 
   return (
     <ProfilePageClient
-      user={user}
+      user={profileUser}
       posts={posts}
       likedPosts={likedPosts}
       isFollowing={isCurrentUserFollowing}
+      dbUserId={dbUserId}
     />
   );
 }
