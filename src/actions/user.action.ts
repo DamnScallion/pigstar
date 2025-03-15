@@ -20,7 +20,6 @@ export async function syncUser() {
 		if (existingUser) {
 			// Check if any user information has changed
 			const hasChanges =
-				existingUser.name !== `${user.firstName || ""} ${user.lastName || ""}` ||
 				existingUser.username !== (user.username ?? user.emailAddresses[0].emailAddress.split("@")[0]) ||
 				existingUser.email !== user.emailAddresses[0].emailAddress ||
 				existingUser.image !== user.imageUrl;
@@ -30,7 +29,6 @@ export async function syncUser() {
 				await prisma.user.update({
 					where: { clerkId: userId },
 					data: {
-						name: `${user.firstName || ""} ${user.lastName || ""}`,
 						username: user.username ?? user.emailAddresses[0].emailAddress.split("@")[0],
 						email: user.emailAddresses[0].emailAddress,
 						image: user.imageUrl,
