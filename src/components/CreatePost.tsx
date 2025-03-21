@@ -14,31 +14,45 @@ import ImageUpload from "./ImageUpload";
 function CreatePost() {
   const { user } = useUser();
   const [content, setContent] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
   const [isPosting, setIsPosting] = useState(false);
   const [showImageUpload, setShowImageUpload] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleSubmit = async () => {
-    if (!content.trim() && !imageUrl) return;
+  if (!content.trim() && !selectedFile) return;
 
-    setIsPosting(true);
-    try {
-      const result = await createPost(content, imageUrl);
-      if (result?.success) {
-        // Reset form
-        setContent("");
-        setImageUrl("");
-        setShowImageUpload(false);
+  setIsPosting(true);
+  try {
+    let imageUrl = "";
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
 
-        toast.success("Post created successfully");
-      }
-    } catch (error) {
-      console.error("Failed to create post:", error);
-      toast.error("Failed to create post");
-    } finally {
-      setIsPosting(false);
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+      imageUrl = result.url;
     }
-  };
+
+    const result = await createPost(content, imageUrl);
+    if (result?.success) {
+      // Reset form
+      setContent("");
+      setSelectedFile(null);
+      setShowImageUpload(false);
+
+      toast.success("Post created successfully");
+    }
+  } catch (error) {
+    console.error("Failed to create post:", error);
+    toast.error("Failed to create post");
+  } finally {
+    setIsPosting(false);
+  }
+};
 
   return (
     <Card className="mb-6">
@@ -57,15 +71,9 @@ function CreatePost() {
             />
           </div>
 
-          {(showImageUpload || imageUrl) && (
+          {showImageUpload && (
             <div className="border rounded-lg p-4">
-              <ImageUpload
-                value={imageUrl}
-                onChange={(url) => {
-                  setImageUrl(url);
-                  if (!url) setShowImageUpload(false);
-                }}
-              />
+              <ImageUpload onChange={setSelectedFile} value={""} />
             </div>
           )}
 
@@ -86,7 +94,7 @@ function CreatePost() {
             <Button
               className="flex items-center"
               onClick={handleSubmit}
-              disabled={(!content.trim() && !imageUrl) || isPosting}
+              disabled={(!content.trim() && !selectedFile) || isPosting}
             >
               {isPosting ? (
                 <>
@@ -106,4 +114,5 @@ function CreatePost() {
     </Card>
   );
 }
+
 export default CreatePost;

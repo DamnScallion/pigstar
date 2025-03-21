@@ -1,40 +1,29 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import { XIcon, ImageIcon } from "lucide-react";
 
 interface ImageUploadProps {
-  onChange: (url: string) => void;
+  onChange: (file: File | null) => void;
   value: string;
 }
 
 const ImageUpload = ({ onChange, value }: ImageUploadProps) => {
-  const [isUploading, setIsUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(value || null);
 
-  const handleUpload = async (file: File) => {
-    setIsUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const { url } = await response.json();
-      setPreview(url); // Set preview after upload
-      onChange(url);
-    } catch (error) {
-      console.error("Upload failed:", error);
-    } finally {
-      setIsUploading(false);
-    }
+  const handleFileChange = (file: File) => {
+    onChange(file);
+    const fileReader = new FileReader();
+    fileReader.onload = () => {
+      if (fileReader.result) {
+        setPreview(fileReader.result as string);
+      }
+    };
+    fileReader.readAsDataURL(file);
   };
 
   const handleRemoveImage = () => {
     setPreview(null);
-    onChange("");
+    onChange(null);
   };
 
   return (
@@ -60,7 +49,7 @@ const ImageUpload = ({ onChange, value }: ImageUploadProps) => {
             type="file"
             accept="image/*"
             onChange={(e) =>
-              e.target.files?.[0] && handleUpload(e.target.files[0])
+              e.target.files?.[0] && handleFileChange(e.target.files[0])
             }
             className="hidden"
             id="upload-input"
@@ -69,14 +58,10 @@ const ImageUpload = ({ onChange, value }: ImageUploadProps) => {
             htmlFor="upload-input"
             className="block w-full h-full cursor-pointer"
           >
-            {isUploading ? (
-              "Uploading..."
-            ) : (
-              <div className="flex flex-col items-center justify-center">
-                <ImageIcon className="w-6 h-6 text-gray-400 mb-2" />
-                <span>Click to Upload</span>
-              </div>
-            )}
+            <div className="flex flex-col items-center justify-center">
+              <ImageIcon className="w-6 h-6 text-gray-400 mb-2" />
+              <span>Click to Upload</span>
+            </div>
           </label>
         </>
       )}
