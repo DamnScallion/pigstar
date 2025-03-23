@@ -109,9 +109,11 @@ function PostCard({ post, currentUserId }: { post: Post; currentUserId: string |
 
           {/* POST IMAGE */}
           {post.image && (
-            <div className="rounded-lg overflow-hidden">
-              <img src={post.image} alt="Post content" className="w-full h-auto object-cover" />
-            </div>
+            <Link href={`/post/${post.id}`} legacyBehavior>
+              <div className="rounded-lg overflow-hidden cursor-pointer">
+                <img src={post.image} alt="Post content" className="w-full h-auto object-cover" />
+              </div>
+            </Link>
           )}
 
           {/* LIKE & COMMENT BUTTONS */}

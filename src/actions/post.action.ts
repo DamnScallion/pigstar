@@ -53,7 +53,7 @@ export async function getPosts() {
             },
           },
           orderBy: {
-            createdAt: "asc",
+            createdAt: "desc",
           },
         },
         likes: {
@@ -77,6 +77,56 @@ export async function getPosts() {
   }
 }
 
+export async function getPostById(postId: string) {
+  try {
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+            username: true,
+          },
+        },
+        comments: {
+          include: {
+            author: {
+              select: {
+                id: true,
+                username: true,
+                image: true,
+                name: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+        likes: {
+          select: {
+            userId: true,
+          },
+        },
+        _count: {
+          select: {
+            likes: true,
+            comments: true,
+          },
+        },
+      },
+    });
+
+    if (!post) throw new Error("Post not found");
+
+    return post;
+  } catch (error) {
+    console.error("Failed to fetch post by ID:", error);
+    return null;
+  }
+}
 
 export async function toggleLike(postId: string) {
   try {
@@ -121,15 +171,15 @@ export async function toggleLike(postId: string) {
         }),
         ...(post.authorId !== userId
           ? [
-              prisma.notification.create({
-                data: {
-                  type: "LIKE",
-                  userId: post.authorId, // recipient (post author)
-                  creatorId: userId, // person who liked
-                  postId,
-                },
-              }),
-            ]
+            prisma.notification.create({
+              data: {
+                type: "LIKE",
+                userId: post.authorId, // recipient (post author)
+                creatorId: userId, // person who liked
+                postId,
+              },
+            }),
+          ]
           : []),
       ]);
     }
@@ -141,7 +191,6 @@ export async function toggleLike(postId: string) {
     return { success: false, error: "Failed to toggle like" };
   }
 }
-
 
 export async function createComment(postId: string, content: string) {
   try {
@@ -191,7 +240,6 @@ export async function createComment(postId: string, content: string) {
     return { success: false, error: "Failed to create comment" };
   }
 }
-
 
 export async function deletePost(postId: string) {
   try {
