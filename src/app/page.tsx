@@ -3,6 +3,8 @@ import { getCurrentUserId } from "@/actions/user.action";
 import CreatePost from "@/components/CreatePost";
 import PostCard from "@/components/PostCard";
 import WhoToFollow from "@/components/WhoToFollow";
+import Sidebar from '@/components/Sidebar';
+
 import { currentUser } from "@clerk/nextjs/server";
 
 export default async function Home() {
@@ -13,7 +15,10 @@ export default async function Home() {
   console.log({ posts });
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="hidden lg:block lg:col-span-3">
+        <Sidebar />
+      </div>
       <div className="lg:col-span-6">
         {user ? <CreatePost /> : null}
 
@@ -25,8 +30,8 @@ export default async function Home() {
 
       </div>
 
-      <div className="hidden lg:block lg:col-span-4 sticky top-20">
-        <WhoToFollow /> 
+      <div className="hidden lg:block lg:col-span-3 sticky top-20">
+        <WhoToFollow />
       </div>
     </div>
   );

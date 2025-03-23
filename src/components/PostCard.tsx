@@ -111,7 +111,7 @@ function PostCard({ post, currentUserId }: { post: Post; currentUserId: string |
           {post.image && (
             <Link href={`/post/${post.id}`} legacyBehavior>
               <div className="rounded-lg overflow-hidden cursor-pointer">
-                <img src={post.image} alt="Post content" className="w-full h-auto object-cover" />
+                <img src={post.image} alt="Post content" className="w-full h-full object-cover" style={{ aspectRatio: '1 / 1' }} />
               </div>
             </Link>
           )}

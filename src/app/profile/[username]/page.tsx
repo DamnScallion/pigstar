@@ -7,6 +7,7 @@ import {
 import { notFound } from "next/navigation";
 import ProfilePageClient from "./ProfilePageClient";
 import { getCurrentUserId } from "@/actions/user.action";
+import Sidebar from "@/components/Sidebar";
 
 export async function generateMetadata({ params }: { params: { username: string } }) {
   const user = await getProfileByUsername(params.username);
@@ -31,13 +32,20 @@ async function ProfilePageServer({ params }: { params: { username: string } }) {
   const currentUserId = await getCurrentUserId();
 
   return (
-    <ProfilePageClient
-      user={profileUser}
-      posts={posts}
-      likedPosts={likedPosts}
-      isFollowing={isCurrentUserFollowing}
-      currentUserId={currentUserId}
-    />
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="hidden lg:block lg:col-span-3">
+        <Sidebar />
+      </div>
+      <div className="lg:col-span-6">
+        <ProfilePageClient
+          user={profileUser}
+          posts={posts}
+          likedPosts={likedPosts}
+          isFollowing={isCurrentUserFollowing}
+          currentUserId={currentUserId}
+        />
+      </div>
+    </div>
   );
 }
 export default ProfilePageServer;

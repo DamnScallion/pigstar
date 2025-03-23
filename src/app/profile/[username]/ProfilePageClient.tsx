@@ -27,9 +27,11 @@ import {
   HeartIcon,
   LinkIcon,
   MapPinIcon,
+  ArrowLeftIcon,
 } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 type User = Awaited<ReturnType<typeof getProfileByUsername>>;
 type Posts = Awaited<ReturnType<typeof getUserPosts>>;
@@ -49,6 +51,8 @@ function ProfilePageClient({
   user,
   currentUserId,
 }: ProfilePageClientProps) {
+  const router = useRouter();
+
   const { user: currentUser } = useUser();
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
@@ -96,6 +100,12 @@ function ProfilePageClient({
 
   return (
     <div className="max-w-3xl mx-auto">
+      <div className="mb-4">
+        <Button variant="ghost" size="sm" onClick={() => router.back()} className="flex items-center gap-2">
+          <ArrowLeftIcon className="size-5" />
+          Back
+        </Button>
+      </div>
       <div className="grid grid-cols-1 gap-6">
         <div className="w-full max-w-lg mx-auto">
           <Card className="bg-card">

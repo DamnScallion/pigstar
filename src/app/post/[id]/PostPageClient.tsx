@@ -88,13 +88,13 @@ const PostPageClient = ({ post, currentUserId }: PostPageClientProps) => {
       </div>
       <Card className="overflow-hidden">
         <CardContent className="p-4 sm:p-6">
-          <div className="space-y-4 lg:flex lg:flex-row">
+          <div className="space-y-4">
             {post.image && (
-              <div className="lg:w-1/2 rounded-lg overflow-hidden cursor-pointer">
-                <img src={post.image} alt="Post content" className="w-full h-auto object-cover rounded-lg" />
+              <div className="rounded-lg overflow-hidden cursor-pointer">
+                <img src={post.image} alt="Post content" className="w-full h-full object-cover" style={{ aspectRatio: '1 / 1' }}/>
               </div>
             )}
-            <div className='lg:w-1/2 lg:space-y-0 lg:ml-6'>
+            <div className=''>
               <div className="flex space-x-3 sm:space-x-4">
                 <Link href={`/profile/${post.author.username}`}>
                   <Avatar className="size-8 sm:w-10 sm:h-10">
