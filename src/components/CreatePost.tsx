@@ -16,43 +16,47 @@ function CreatePost() {
   const [content, setContent] = useState("");
   const [isPosting, setIsPosting] = useState(false);
   const [showImageUpload, setShowImageUpload] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const handleSubmit = async () => {
-  if (!content.trim() && !selectedFile) return;
+    if (!content.trim() && selectedFiles.length === 0) return;
 
-  setIsPosting(true);
-  try {
-    let imageUrl = "";
-    if (selectedFile) {
-      const formData = new FormData();
-      formData.append("file", selectedFile);
+    setIsPosting(true);
+    try {
+      let imageUrls: string[] = [];
 
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
+      if (selectedFiles.length > 0) {
+        const formData = new FormData();
+        selectedFiles.forEach((file) => {
+          formData.append("file", file); // append multiple with same key
+        });
 
-      const result = await response.json();
-      imageUrl = result.url;
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+        imageUrls = result.urls?.filter(Boolean) || [];
+      }
+
+
+      const result = await createPost(content, imageUrls);
+      if (result?.success) {
+        // Reset form
+        setContent("");
+        setSelectedFiles([]);
+        setShowImageUpload(false);
+
+        toast.success("Post created successfully");
+      }
+    } catch (error) {
+      console.error("Failed to create post:", error);
+      toast.error("Failed to create post");
+    } finally {
+      setIsPosting(false);
     }
-
-    const result = await createPost(content, imageUrl);
-    if (result?.success) {
-      // Reset form
-      setContent("");
-      setSelectedFile(null);
-      setShowImageUpload(false);
-
-      toast.success("Post created successfully");
-    }
-  } catch (error) {
-    console.error("Failed to create post:", error);
-    toast.error("Failed to create post");
-  } finally {
-    setIsPosting(false);
-  }
-};
+  };
 
   return (
     <Card className="mb-6">
@@ -73,7 +77,7 @@ function CreatePost() {
 
           {showImageUpload && (
             <div className="border rounded-lg p-4">
-              <ImageUpload onChange={setSelectedFile} value={""} />
+              <ImageUpload onChange={setSelectedFiles} />
             </div>
           )}
 
@@ -94,7 +98,7 @@ function CreatePost() {
             <Button
               className="flex items-center"
               onClick={handleSubmit}
-              disabled={(!content.trim() && !selectedFile) || isPosting}
+              disabled={(!content.trim() && selectedFiles.length === 0) || isPosting}
             >
               {isPosting ? (
                 <>

@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUserId } from "./user.action";
 import { revalidatePath } from "next/cache";
 
-export async function createPost(content: string, imageUrl: string) {
+export async function createPost(content: string, imageUrls: string[]) {
   try {
     const userId = await getCurrentUserId();
 
@@ -13,12 +13,12 @@ export async function createPost(content: string, imageUrl: string) {
     const post = await prisma.post.create({
       data: {
         content,
-        image: imageUrl,
+        images: { set: imageUrls }, 
         authorId: userId,
       },
     });
 
-    revalidatePath("/"); // purge the cache for the home page
+    revalidatePath("/"); 
     return { success: true, post };
   } catch (error) {
     console.error("Failed to create post:", error);
@@ -257,7 +257,7 @@ export async function deletePost(postId: string) {
       where: { id: postId },
     });
 
-    revalidatePath("/"); // purge the cache
+    revalidatePath("/"); 
     return { success: true };
   } catch (error) {
     console.error("Failed to delete post:", error);

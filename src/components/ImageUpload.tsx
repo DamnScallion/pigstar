@@ -3,54 +3,60 @@ import React, { useState } from "react";
 import { XIcon, ImageIcon } from "lucide-react";
 
 interface ImageUploadProps {
-  onChange: (file: File | null) => void;
-  value: string;
+  onChange: (files: File[]) => void;
 }
 
-const ImageUpload = ({ onChange, value }: ImageUploadProps) => {
-  const [preview, setPreview] = useState<string | null>(value || null);
+const ImageUpload = ({ onChange }: ImageUploadProps) => {
+  const [preview, setPreview] = useState<string[]>([]);
 
-  const handleFileChange = (file: File) => {
-    onChange(file);
-    const fileReader = new FileReader();
-    fileReader.onload = () => {
-      if (fileReader.result) {
-        setPreview(fileReader.result as string);
-      }
-    };
-    fileReader.readAsDataURL(file);
+  const handleFileChange = (files: FileList) => {
+    const fileArray = Array.from(files);
+    onChange(fileArray);
+    fileArray.forEach((file) => {
+      const fileReader = new FileReader();
+      fileReader.onload = () => {
+        if (fileReader.result) {
+          setPreview((prev) => [...prev, fileReader.result as string]);
+        }
+      };
+      fileReader.readAsDataURL(file);
+    });
   };
 
-  const handleRemoveImage = () => {
-    setPreview(null);
-    onChange(null);
+  const handleRemoveImage = (index: number) => {
+    setPreview((prev) => prev.filter((_, i) => i !== index));
+    onChange(preview.filter((_, i) => i !== index).map((url) => new File([url], "image")));
   };
 
   return (
-    <div className="relative border-2 border-dashed border-gray-300 rounded-md p-4 text-center">
-      {preview ? (
-        <div className="relative inline-block">
-          <img
-            src={preview}
-            alt="Selected"
-            className="max-h-60 w-auto rounded-lg object-cover"
-          />
-          <button
-            type="button"
-            className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md hover:bg-gray-100"
-            onClick={handleRemoveImage}
-          >
-            <XIcon className="w-4 h-4 text-gray-600" />
-          </button>
+    <div className="relative text-center">
+      {preview.length > 0 ? (
+        <div className="grid grid-cols-3 gap-4">
+          {preview.map((src, index) => (
+            <div key={index} className="grid-span-1 relative inline-block">
+              <img
+                src={src}
+                alt="Selected"
+                className="w-full h-full rounded-lg object-cover"
+                style={{ aspectRatio: '1 / 1' }}
+              />
+              <button
+                type="button"
+                className="absolute cursor-pointer top-1 right-1 bg-white rounded-full p-1 shadow-md hover:bg-gray-100"
+                onClick={() => handleRemoveImage(index)}
+              >
+                <XIcon className="w-4 h-4 text-gray-600" />
+              </button>
+            </div>
+          ))}
         </div>
       ) : (
         <>
           <input
             type="file"
             accept="image/*"
-            onChange={(e) =>
-              e.target.files?.[0] && handleFileChange(e.target.files[0])
-            }
+            multiple
+            onChange={(e) => e.target.files && handleFileChange(e.target.files)}
             className="hidden"
             id="upload-input"
           />

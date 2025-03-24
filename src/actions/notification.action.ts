@@ -26,6 +26,7 @@ export async function getNotifications() {
             id: true,
             content: true,
             image: true,
+            images: true,
           },
         },
         comment: {

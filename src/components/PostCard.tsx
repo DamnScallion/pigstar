@@ -72,7 +72,7 @@ function PostCard({ post, currentUserId }: { post: Post; currentUserId: string |
   };
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="mb-4 overflow-hidden">
       <CardContent className="p-4 sm:p-6">
         <div className="space-y-4">
           <div className="flex space-x-3 sm:space-x-4">
@@ -108,10 +108,10 @@ function PostCard({ post, currentUserId }: { post: Post; currentUserId: string |
           </div>
 
           {/* POST IMAGE */}
-          {post.image && (
+          {post.images && post.images.length > 0 && (
             <Link href={`/post/${post.id}`} legacyBehavior>
               <div className="rounded-lg overflow-hidden cursor-pointer">
-                <img src={post.image} alt="Post content" className="w-full h-full object-cover" style={{ aspectRatio: '1 / 1' }} />
+                <img src={post.images[0]} alt="Post content" className="w-full h-full object-cover" style={{ aspectRatio: '1 / 1' }} />
               </div>
             </Link>
           )}
