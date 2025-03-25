@@ -26,18 +26,20 @@ function CreatePost() {
       let imageUrls: string[] = [];
 
       if (selectedFiles.length > 0) {
-        const formData = new FormData();
-        selectedFiles.forEach((file) => {
-          formData.append("file", file); // append multiple with same key
+        const uploadPromises = selectedFiles.map(async (file) => {
+          const formData = new FormData();
+          formData.append("file", file);
+
+          const response = await fetch("/api/upload", {
+            method: "POST",
+            body: formData,
+          });
+
+          const result = await response.json();
+          return result.urls?.[0]; // result.urls is an array
         });
 
-        const response = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
-
-        const result = await response.json();
-        imageUrls = result.urls?.filter(Boolean) || [];
+        imageUrls = (await Promise.all(uploadPromises)).filter(Boolean);
       }
 
 
