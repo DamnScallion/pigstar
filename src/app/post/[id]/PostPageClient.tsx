@@ -13,6 +13,9 @@ import { HeartIcon, LogInIcon, MessageCircleIcon, SendIcon, ArrowLeftIcon } from
 import { Textarea } from "../../../components/ui/textarea";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination } from "swiper/modules";
+import 'swiper/swiper-bundle.css';
 
 type Post = Awaited<ReturnType<typeof getPostById>>;
 
@@ -90,9 +93,19 @@ const PostPageClient = ({ post, currentUserId }: PostPageClientProps) => {
         <CardContent className="p-4 sm:p-6">
           <div className="space-y-4">
             {post.images && post.images.length > 0 && (
-              <div className="rounded-lg overflow-hidden cursor-pointer">
-                <img src={post.images[0]} alt="Post content" className="w-full h-full object-cover" style={{ aspectRatio: '1 / 1' }}/>
-              </div>
+              <Swiper
+                spaceBetween={10}
+                slidesPerView={1}
+                navigation
+                pagination={{ clickable: true }}
+                modules={[Navigation, Pagination]}
+              >
+                {post.images.map((image, index) => (
+                  <SwiperSlide key={index}>
+                    <img src={image} alt={`Post image ${index + 1}`} className="w-full h-full rounded-lg object-cover" style={{ aspectRatio: '1 / 1' }} />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
             )}
             <div className=''>
               <div className="flex space-x-3 sm:space-x-4">
