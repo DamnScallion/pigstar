@@ -69,6 +69,7 @@ function CreatePost() {
               <AvatarImage src={user?.imageUrl || "/avatar.png"} />
             </Avatar>
             <Textarea
+              id='create-post'
               placeholder="What's on your mind?"
               className="min-h-[100px] resize-none border-none focus-visible:ring-0 p-0 text-base"
               value={content}

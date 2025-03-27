@@ -75,39 +75,53 @@ function PostCard({ post, currentUserId }: { post: Post; currentUserId: string |
     <Card className="mb-4 overflow-hidden">
       <CardContent className="p-4 sm:p-6">
         <div className="space-y-4">
-          <div className="flex space-x-3 sm:space-x-4">
+          <div className="flex items-center space-x-3 sm:space-x-4">
+            {/* POST AUTHOR AVATAR */}
             <Link href={`/profile/${post.author.username}`}>
               <Avatar className="size-8 sm:w-10 sm:h-10">
                 <AvatarImage src={post.author.image ?? "/avatar.png"} />
               </Avatar>
             </Link>
 
-            {/* POST HEADER & TEXT CONTENT */}
+            {/* POST HEADER */}
             <div className="flex-1 min-w-0">
-              <div className="flex items-start justify-between">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 truncate">
-                  <Link
-                    href={`/profile/${post.author.username}`}
-                    className="font-semibold truncate"
-                  >
-                    {post.author.name}
-                  </Link>
-                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                    <Link href={`/profile/${post.author.username}`}>@{post.author.username}</Link>
-                    <span>•</span>
-                    <span>{formatDistanceToNow(new Date(post.createdAt))} ago</span>
+              <div className="flex flex-col">
+                {/* First line: name, username, delete button */}
+                <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center gap-2 truncate">
+                    <Link
+                      href={`/profile/${post.author.username}`}
+                      className="font-semibold truncate"
+                    >
+                      {post.author.name}
+                    </Link>
+                    <Link
+                      href={`/profile/${post.author.username}`}
+                      className="text-sm text-muted-foreground truncate"
+                    >
+                      @{post.author.username}
+                    </Link>
                   </div>
+                  {/* Check if current user is the post author */}
+                  {currentUserId === post.author.id && (
+                    <DeleteAlertDialog isDeleting={isDeleting} onDelete={handleDeletePost} />
+                  )}
                 </div>
-                {/* Check if current user is the post author */}
-                {currentUserId === post.author.id && (
-                  <DeleteAlertDialog isDeleting={isDeleting} onDelete={handleDeletePost} />
-                )}
+
+                {/* Second line: post createdAt */}
+                <span className="text-sm text-muted-foreground">
+                  {formatDistanceToNow(new Date(post.createdAt))} ago
+                </span>
               </div>
-              <p className="mt-2 text-sm text-foreground break-words whitespace-pre-line">
-                {post.content}
-              </p>
             </div>
           </div>
+
+          {/* POST TEXT CONTENT */}
+          {post.content && (
+            <p className="mt-2 text-sm text-foreground break-words whitespace-pre-line">
+              {post.content}
+            </p>
+          )}
 
           {/* POST IMAGE */}
           {post.images && post.images.length > 0 && (
