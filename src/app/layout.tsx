@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import Navbar from "@/components/Navbar";
 import Sidebar from '@/components/Sidebar';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Toaster } from "react-hot-toast";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -54,6 +55,8 @@ export default function RootLayout({
               </main>
               <SpeedInsights />
             </div>
+
+            <Toaster />
           </ThemeProvider>
         </body>
       </html>
