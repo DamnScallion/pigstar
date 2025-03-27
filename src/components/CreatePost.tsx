@@ -78,7 +78,7 @@ function CreatePost() {
           </div>
 
           {showImageUpload && (
-            <div className="border rounded-lg p-4">
+            <div>
               <ImageUpload onChange={setSelectedFiles} />
             </div>
           )}
