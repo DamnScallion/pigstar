@@ -14,7 +14,7 @@ import { Textarea } from "../../../components/ui/textarea";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from "swiper/modules";
+import { Pagination } from "swiper/modules";
 import 'swiper/swiper-bundle.css';
 
 type Post = Awaited<ReturnType<typeof getPostById>>;
@@ -96,9 +96,8 @@ const PostPageClient = ({ post, currentUserId }: PostPageClientProps) => {
               <Swiper
                 spaceBetween={10}
                 slidesPerView={1}
-                navigation
                 pagination={{ clickable: true }}
-                modules={[Navigation, Pagination]}
+                modules={[Pagination]}
               >
                 {post.images.map((image, index) => (
                   <SwiperSlide key={index}>
@@ -136,7 +135,9 @@ const PostPageClient = ({ post, currentUserId }: PostPageClientProps) => {
                       <DeleteAlertDialog isDeleting={isDeleting} onDelete={handleDeletePost} />
                     )}
                   </div>
-                  <p className="mt-2 text-sm text-foreground break-words">{post.content}</p>
+                  <p className="mt-2 text-sm text-foreground break-words whitespace-pre-line">
+                    {post.content}
+                  </p>
                 </div>
               </div>
 

@@ -103,7 +103,9 @@ function PostCard({ post, currentUserId }: { post: Post; currentUserId: string |
                   <DeleteAlertDialog isDeleting={isDeleting} onDelete={handleDeletePost} />
                 )}
               </div>
-              <p className="mt-2 text-sm text-foreground break-words">{post.content}</p>
+              <p className="mt-2 text-sm text-foreground break-words whitespace-pre-line">
+                {post.content}
+              </p>
             </div>
           </div>
 
@@ -122,9 +124,8 @@ function PostCard({ post, currentUserId }: { post: Post; currentUserId: string |
               <Button
                 variant="ghost"
                 size="sm"
-                className={`text-muted-foreground gap-2 ${
-                  hasLiked ? "text-red-500 hover:text-red-600" : "hover:text-red-500"
-                }`}
+                className={`text-muted-foreground gap-2 ${hasLiked ? "text-red-500 hover:text-red-600" : "hover:text-red-500"
+                  }`}
                 onClick={handleLike}
               >
                 {hasLiked ? (
