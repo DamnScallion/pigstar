@@ -4,11 +4,12 @@ import { PlusIcon, XIcon } from "lucide-react";
 
 interface ImageUploadProps {
   onChange: (files: File[]) => void;
+  disabled?: boolean;
 }
 
 const MAX_IMAGES = 9;
 
-const ImageUpload = ({ onChange }: ImageUploadProps) => {
+const ImageUpload = ({ onChange, disabled = false }: ImageUploadProps) => {
   const [previews, setPreviews] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -16,11 +17,12 @@ const ImageUpload = ({ onChange }: ImageUploadProps) => {
   const handleFileChange = (fileList: FileList) => {
     const newFiles = Array.from(fileList);
 
+
     // Only take files up to the limit
     const remaining = MAX_IMAGES - files.length;
-    const limitedNewFiles = newFiles.slice(0, remaining);
+    const limitedFiles = newFiles.slice(0, remaining);
 
-    limitedNewFiles.forEach((file) => {
+    limitedFiles.forEach((file) => {
       const reader = new FileReader();
       reader.onload = () => {
         if (reader.result) {
@@ -30,12 +32,14 @@ const ImageUpload = ({ onChange }: ImageUploadProps) => {
       reader.readAsDataURL(file);
     });
 
-    const updatedFiles = [...files, ...limitedNewFiles];
+    const updatedFiles = [...files, ...limitedFiles];
     setFiles(updatedFiles);
     onChange(updatedFiles);
   };
 
   const handleRemoveImage = (index: number) => {
+    if (disabled) return;
+
     const newFiles = files.filter((_, i) => i !== index);
     const newPreviews = previews.filter((_, i) => i !== index);
     setFiles(newFiles);
@@ -44,7 +48,7 @@ const ImageUpload = ({ onChange }: ImageUploadProps) => {
   };
 
   const handleClickAdd = () => {
-    if (inputRef.current) {
+    if (!disabled && inputRef.current) {
       inputRef.current.click();
     }
   };
@@ -62,7 +66,8 @@ const ImageUpload = ({ onChange }: ImageUploadProps) => {
           <button
             type="button"
             onClick={() => handleRemoveImage(index)}
-            className="absolute top-1 right-1 bg-white rounded-full p-1 shadow hover:bg-gray-100"
+            disabled={disabled}
+            className="absolute top-1 right-1 bg-white rounded-full p-1 shadow hover:bg-gray-100 disabled:opacity-50"
           >
             <XIcon className="w-4 h-4 text-gray-600" />
           </button>
@@ -72,7 +77,9 @@ const ImageUpload = ({ onChange }: ImageUploadProps) => {
       {files.length < MAX_IMAGES && (
         <>
           <div
-            className="relative flex items-center justify-center rounded-lg border border-dashed border-gray-300 hover:bg-muted/30 cursor-pointer"
+            className={`relative flex items-center justify-center rounded-lg border border-dashed border-gray-300 ${
+              disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-muted/30 cursor-pointer"
+            }`}
             style={{ aspectRatio: "1 / 1" }}
             onClick={handleClickAdd}
           >
@@ -86,6 +93,7 @@ const ImageUpload = ({ onChange }: ImageUploadProps) => {
             ref={inputRef}
             onChange={(e) => e.target.files && handleFileChange(e.target.files)}
             className="hidden"
+            disabled={disabled}
           />
         </>
       )}
