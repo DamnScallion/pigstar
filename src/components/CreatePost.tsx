@@ -10,6 +10,7 @@ import { Button } from "./ui/button";
 import { createPost } from "@/actions/post.action";
 import toast from "react-hot-toast";
 import ImageUpload from "./ImageUpload";
+import { uploadImageToCloudinary } from "@/lib/cloudinary-client";
 
 function CreatePost() {
   const { user } = useUser();
@@ -27,21 +28,12 @@ function CreatePost() {
 
       if (selectedFiles.length > 0) {
         const uploadPromises = selectedFiles.map(async (file) => {
-          const formData = new FormData();
-          formData.append("file", file);
-
-          const response = await fetch("/api/upload", {
-            method: "POST",
-            body: formData,
-          });
-
-          const result = await response.json();
-          return result.urls?.[0]; // result.urls is an array
+          const url = await uploadImageToCloudinary(file);
+          return url;
         });
 
         imageUrls = (await Promise.all(uploadPromises)).filter(Boolean);
       }
-
 
       const result = await createPost(content, imageUrls);
       if (result?.success) {
@@ -70,6 +62,7 @@ function CreatePost() {
             </Avatar>
             <Textarea
               id='create-post'
+              aria-label="Create new post content"
               placeholder="What's on your mind?"
               className="min-h-[100px] resize-none border-none focus-visible:ring-0 p-0 text-base"
               value={content}
