@@ -7,6 +7,7 @@ import { Avatar, AvatarImage } from "./ui/avatar";
 import { Textarea } from "./ui/textarea";
 import { ImageIcon, Loader2Icon, SendIcon } from "lucide-react";
 import { Button } from "./ui/button";
+import { Progress } from "./ui/progress";
 import { createPost } from "@/actions/post.action";
 import toast from "react-hot-toast";
 import ImageUpload from "./ImageUpload";
@@ -18,17 +19,25 @@ function CreatePost() {
   const [isPosting, setIsPosting] = useState(false);
   const [showImageUpload, setShowImageUpload] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
 
   const handleSubmit = async () => {
     if (!content.trim() && selectedFiles.length === 0) return;
 
     setIsPosting(true);
+    setUploadProgress(5);
+
     try {
       let imageUrls: string[] = [];
 
       if (selectedFiles.length > 0) {
+        const total = selectedFiles.length;
+        let completed = 0;
+
         const uploadPromises = selectedFiles.map(async (file) => {
           const url = await uploadImageToCloudinary(file);
+          completed += 1;
+          setUploadProgress((completed / total) * 100);
           return url;
         });
 
@@ -37,11 +46,9 @@ function CreatePost() {
 
       const result = await createPost(content, imageUrls);
       if (result?.success) {
-        // Reset form
         setContent("");
         setSelectedFiles([]);
         setShowImageUpload(false);
-
         toast.success("Post created successfully");
       }
     } catch (error) {
@@ -49,6 +56,7 @@ function CreatePost() {
       toast.error("Failed to create post");
     } finally {
       setIsPosting(false);
+      setUploadProgress(0);
     }
   };
 
@@ -61,7 +69,7 @@ function CreatePost() {
               <AvatarImage src={user?.imageUrl || "/avatar.png"} />
             </Avatar>
             <Textarea
-              id='create-post'
+              id="create-post"
               aria-label="Create new post content"
               placeholder="What's on your mind?"
               className="min-h-[100px] resize-none border-none focus-visible:ring-0 p-0 text-base"
@@ -73,7 +81,7 @@ function CreatePost() {
 
           {showImageUpload && (
             <div>
-              <ImageUpload onChange={setSelectedFiles} />
+              <ImageUpload onChange={setSelectedFiles} disabled={isPosting} />
             </div>
           )}
 
@@ -109,6 +117,10 @@ function CreatePost() {
               )}
             </Button>
           </div>
+
+          {isPosting && uploadProgress > 0 && (
+            <Progress value={uploadProgress} className="h-2 mt-2" />
+          )}
         </div>
       </CardContent>
     </Card>
