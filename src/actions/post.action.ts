@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { getCurrentUserId } from "./user.action";
 import { revalidatePath } from "next/cache";
+import cloudinary, { extractCloudinaryPublicId } from "@/lib/cloudinary";
 
 export async function createPost(content: string, imageUrls: string[]) {
   try {
@@ -247,17 +248,26 @@ export async function deletePost(postId: string) {
 
     const post = await prisma.post.findUnique({
       where: { id: postId },
-      select: { authorId: true },
+      select: { authorId: true, images: true }, // include images!
     });
 
     if (!post) throw new Error("Post not found");
     if (post.authorId !== userId) throw new Error("Unauthorized - no delete permission");
 
+    // 1. Delete associated images from Cloudinary
+    for (const imageUrl of post.images) {
+      const publicId = extractCloudinaryPublicId(imageUrl);
+      if (publicId) {
+        await cloudinary.uploader.destroy(publicId);
+      }
+    }
+
+    // 2. Delete post from DB
     await prisma.post.delete({
       where: { id: postId },
     });
 
-    revalidatePath("/"); 
+    revalidatePath("/");
     return { success: true };
   } catch (error) {
     console.error("Failed to delete post:", error);
