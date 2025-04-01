@@ -13,7 +13,7 @@ import { HeartIcon, LogInIcon, MessageCircleIcon, SendIcon } from "lucide-react"
 import { Textarea } from "./ui/textarea";
 
 type Posts = Awaited<ReturnType<typeof getPosts>>;
-type Post = Posts[number];
+type Post = Posts["posts"][number];
 
 function PostCard({ post, currentUserId }: { post: Post; currentUserId: string | null }) {
   const { user } = useUser();

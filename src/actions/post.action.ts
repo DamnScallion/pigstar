@@ -27,9 +27,14 @@ export async function createPost(content: string, imageUrls: string[]) {
   }
 }
 
-export async function getPosts() {
+export async function getPosts(cursor?: string, limit: number = 10) {
   try {
     const posts = await prisma.post.findMany({
+      take: limit + 1,
+      ...(cursor && {
+        skip: 1,
+        cursor: { id: cursor },
+      }),
       orderBy: {
         createdAt: "desc",
       },
@@ -71,7 +76,13 @@ export async function getPosts() {
       },
     });
 
-    return posts;
+    const hasMore = posts.length > limit;
+    const trimmedPosts = hasMore ? posts.slice(0, -1) : posts;
+
+    return {
+      posts: trimmedPosts,
+      nextCursor: hasMore ? trimmedPosts[trimmedPosts.length - 1].id : null,
+    };
   } catch (error) {
     console.log("Error in getPosts", error);
     throw new Error("Failed to fetch posts");
