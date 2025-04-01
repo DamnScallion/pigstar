@@ -50,6 +50,17 @@ export default function PostFeed({ initialPosts, initialCursor, currentUserId }:
     };
   }, [loadMore]);
 
+  // ✅ Listen for new-post events from CreatePost
+  useEffect(() => {
+    const handleNewPost = (e: any) => {
+      const newPost = e.detail;
+      setPosts((prev) => [newPost, ...prev]);
+    };
+
+    window.addEventListener("new-post", handleNewPost);
+    return () => window.removeEventListener("new-post", handleNewPost);
+  }, []);
+
   return (
     <div className="space-y-6">
       {posts.map((post: any) => (
@@ -64,7 +75,6 @@ export default function PostFeed({ initialPosts, initialCursor, currentUserId }:
           <div ref={loaderRef} className="h-4" />
         </>
       )}
-
     </div>
   );
 }

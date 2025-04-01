@@ -20,8 +20,12 @@ function PostCard({ post, currentUserId }: { post: Post; currentUserId: string |
   const [newComment, setNewComment] = useState("");
   const [isCommenting, setIsCommenting] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
-  const [hasLiked, setHasLiked] = useState(post.likes.some((like) => like.userId === currentUserId));
-  const [optimisticLikes, setOptimisticLikes] = useState(post._count.likes);
+  const [hasLiked, setHasLiked] = useState(
+  Array.isArray(post.likes) && post.likes.some((like) => like.userId === currentUserId)
+);
+
+  const [optimisticLikes, setOptimisticLikes] = useState(post._count?.likes ?? 0);
+
   const [showComments, setShowComments] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
