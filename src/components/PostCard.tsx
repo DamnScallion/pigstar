@@ -106,17 +106,48 @@ function PostCard({ post, currentUserId }: { post: Post; currentUserId: string |
 
           {/* POST IMAGE */}
           {post.images && post.images.length > 0 && (
-            <Link href={`/post/${post.id}`} legacyBehavior>
-              <div className="rounded-lg overflow-hidden cursor-pointer">
-                <img src={post.images[0]} alt="Post content" className="w-full h-full object-cover" style={{ aspectRatio: '1 / 1' }} />
-              </div>
-            </Link>
+            <div
+              className={`grid gap-4 ${post.images.length === 1
+                  ? 'grid-cols-1'
+                  : post.images.length === 2
+                    ? 'grid-cols-2'
+                    : post.images.length === 3
+                      ? 'grid-cols-3 grid-rows-2'
+                      : post.images.length === 4
+                        ? 'grid-cols-2'
+                        : post.images.length === 5
+                          ? 'grid-cols-4 grid-rows-2'
+                          : post.images.length === 6
+                            ? 'grid-cols-3 grid-rows-3'
+                            : 'grid-cols-3'
+                }`}
+            >
+              {post.images.map((image, index) => (
+                <Link key={index} href={`/post/${post.id}`} legacyBehavior>
+                  <div
+                    className={`rounded-lg overflow-hidden cursor-pointer ${(post.images.length === 3 && index === 0) ||
+                        (post.images.length === 5 && index === 0) ||
+                        (post.images.length === 6 && index === 0)
+                        ? 'row-span-2 col-span-2'
+                        : ''
+                      }`}
+                  >
+                    <img
+                      src={image}
+                      alt={`Post image ${index + 1}`}
+                      className="w-full h-full object-cover"
+                      style={{ aspectRatio: '1 / 1' }}
+                    />
+                  </div>
+                </Link>
+              ))}
+            </div>
           )}
 
           {/* POST TEXT CONTENT */}
           {post.content && (
             <Link href={`/post/${post.id}`} legacyBehavior>
-            <p className="mt-2 text-sm text-foreground break-words whitespace-pre-line cursor-pointer">
+              <p className="mt-2 text-sm text-foreground break-words whitespace-pre-line cursor-pointer">
                 {isExpanded ? post.content : truncatedContent}
                 {post.content.length > 100 && (
                   <span className="text-blue-500 cursor-pointer" onClick={(e) => { e.stopPropagation(); toggleContent() }}>
