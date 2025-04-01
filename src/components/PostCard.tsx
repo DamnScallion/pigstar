@@ -1,6 +1,6 @@
 "use client";
 
-import { createComment, deletePost, getPosts, toggleLike } from "@/actions/post.action";
+import { createComment, getPosts, toggleLike } from "@/actions/post.action";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -8,7 +8,6 @@ import { Card, CardContent } from "./ui/card";
 import Link from "next/link";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { formatDistanceToNow } from "date-fns";
-import { DeleteAlertDialog } from "./DeleteAlertDialog";
 import { Button } from "./ui/button";
 import { HeartIcon, LogInIcon, MessageCircleIcon, SendIcon } from "lucide-react";
 import { Textarea } from "./ui/textarea";
@@ -21,10 +20,16 @@ function PostCard({ post, currentUserId }: { post: Post; currentUserId: string |
   const [newComment, setNewComment] = useState("");
   const [isCommenting, setIsCommenting] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [hasLiked, setHasLiked] = useState(post.likes.some((like) => like.userId === currentUserId));
   const [optimisticLikes, setOptimisticLikes] = useState(post._count.likes);
   const [showComments, setShowComments] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleContent = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const truncatedContent = post.content ? (post.content.length > 100 ? post.content.substring(0, 100) + '...' : post.content) : '';
 
   const handleLike = async () => {
     if (isLiking) return;
@@ -57,19 +62,6 @@ function PostCard({ post, currentUserId }: { post: Post; currentUserId: string |
     }
   };
 
-  const handleDeletePost = async () => {
-    if (isDeleting) return;
-    try {
-      setIsDeleting(true);
-      const result = await deletePost(post.id);
-      if (result.success) toast.success("Post deleted successfully");
-      else throw new Error(result.error);
-    } catch (error) {
-      toast.error("Failed to delete post");
-    } finally {
-      setIsDeleting(false);
-    }
-  };
 
   return (
     <Card className="mb-4 overflow-hidden">
@@ -102,10 +94,6 @@ function PostCard({ post, currentUserId }: { post: Post; currentUserId: string |
                       @{post.author.username}
                     </Link>
                   </div>
-                  {/* Check if current user is the post author */}
-                  {currentUserId === post.author.id && (
-                    <DeleteAlertDialog isDeleting={isDeleting} onDelete={handleDeletePost} />
-                  )}
                 </div>
 
                 {/* Second line: post createdAt */}
@@ -116,19 +104,26 @@ function PostCard({ post, currentUserId }: { post: Post; currentUserId: string |
             </div>
           </div>
 
-          {/* POST TEXT CONTENT */}
-          {post.content && (
-            <p className="mt-2 text-sm text-foreground break-words whitespace-pre-line">
-              {post.content}
-            </p>
-          )}
-
           {/* POST IMAGE */}
           {post.images && post.images.length > 0 && (
             <Link href={`/post/${post.id}`} legacyBehavior>
               <div className="rounded-lg overflow-hidden cursor-pointer">
                 <img src={post.images[0]} alt="Post content" className="w-full h-full object-cover" style={{ aspectRatio: '1 / 1' }} />
               </div>
+            </Link>
+          )}
+
+          {/* POST TEXT CONTENT */}
+          {post.content && (
+            <Link href={`/post/${post.id}`} legacyBehavior>
+            <p className="mt-2 text-sm text-foreground break-words whitespace-pre-line cursor-pointer">
+                {isExpanded ? post.content : truncatedContent}
+                {post.content.length > 100 && (
+                  <span className="text-blue-500 cursor-pointer" onClick={(e) => { e.stopPropagation(); toggleContent() }}>
+                    {isExpanded ? ' hide' : ' read more'}
+                  </span>
+                )}
+              </p>
             </Link>
           )}
 
@@ -243,7 +238,8 @@ function PostCard({ post, currentUserId }: { post: Post; currentUserId: string |
           )}
         </div>
       </CardContent>
-    </Card>
+    </Card >
   );
 }
+
 export default PostCard;
