@@ -1,8 +1,11 @@
-"use client";
+"use client"
 
-import { getProfileByUsername, getUserPosts, updateProfile } from "@/actions/profile.action";
+import {
+  getProfileByUsername,
+  getUserPosts,
+  updateProfile,
+} from "@/actions/profile.action";
 import { toggleFollow } from "@/actions/user.action";
-import PostCard from "@/components/PostCard";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -32,28 +35,29 @@ import {
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import ProfilePostFeed from "@/components/ProfilePostFeed";
 
 type User = Awaited<ReturnType<typeof getProfileByUsername>>;
-type Posts = Awaited<ReturnType<typeof getUserPosts>>;
+type PostsData = Awaited<ReturnType<typeof getUserPosts>>;
 
 interface ProfilePageClientProps {
   user: NonNullable<User>;
-  posts: Posts;
-  likedPosts: Posts;
+  posts: PostsData;
+  likedPosts: PostsData;
   isFollowing: boolean;
   currentUserId: string | null;
 }
 
-function ProfilePageClient({
-  isFollowing: initialIsFollowing,
-  likedPosts,
-  posts,
+export default function ProfilePageClient({
   user,
+  posts,
+  likedPosts,
+  isFollowing: initialIsFollowing,
   currentUserId,
 }: ProfilePageClientProps) {
   const router = useRouter();
-
   const { user: currentUser } = useUser();
+
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
   const [isUpdatingFollow, setIsUpdatingFollow] = useState(false);
@@ -67,9 +71,9 @@ function ProfilePageClient({
 
   const handleEditSubmit = async () => {
     const formData = new FormData();
-    Object.entries(editForm).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
+    Object.entries(editForm).forEach(([key, value]) =>
+      formData.append(key, value)
+    );
 
     const result = await updateProfile(formData);
     if (result.success) {
@@ -80,12 +84,11 @@ function ProfilePageClient({
 
   const handleFollow = async () => {
     if (!currentUser) return;
-
     try {
       setIsUpdatingFollow(true);
       await toggleFollow(user.id);
       setIsFollowing(!isFollowing);
-    } catch (error) {
+    } catch {
       toast.error("Failed to update follow status");
     } finally {
       setIsUpdatingFollow(false);
@@ -101,14 +104,21 @@ function ProfilePageClient({
   return (
     <div className="max-w-3xl mx-auto">
       <div className="mb-4">
-        <Button variant="ghost" size="sm" onClick={() => router.back()} className="flex items-center gap-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => router.back()}
+          className="flex items-center gap-2"
+        >
           <ArrowLeftIcon className="size-5" />
           Back
         </Button>
       </div>
+
+      {/* Profile Card */}
       <div className="grid grid-cols-1 gap-6">
         <div className="w-full max-w-lg mx-auto">
-          <Card className="bg-card">
+          <Card>
             <CardContent className="pt-6">
               <div className="flex flex-col items-center text-center">
                 <Avatar className="w-24 h-24">
@@ -118,27 +128,25 @@ function ProfilePageClient({
                 <p className="text-muted-foreground">@{user.username}</p>
                 <p className="mt-2 text-sm">{user.bio}</p>
 
-                {/* PROFILE STATS */}
                 <div className="w-full mt-6">
                   <div className="flex justify-between mb-4">
                     <div>
-                      <div className="font-semibold">{user._count.following.toLocaleString()}</div>
+                      <div className="font-semibold">{user._count.following}</div>
                       <div className="text-sm text-muted-foreground">Following</div>
                     </div>
                     <Separator orientation="vertical" />
                     <div>
-                      <div className="font-semibold">{user._count.followers.toLocaleString()}</div>
+                      <div className="font-semibold">{user._count.followers}</div>
                       <div className="text-sm text-muted-foreground">Followers</div>
                     </div>
                     <Separator orientation="vertical" />
                     <div>
-                      <div className="font-semibold">{user._count.posts.toLocaleString()}</div>
+                      <div className="font-semibold">{user._count.posts}</div>
                       <div className="text-sm text-muted-foreground">Posts</div>
                     </div>
                   </div>
                 </div>
 
-                {/* "FOLLOW & EDIT PROFILE" BUTTONS */}
                 {!currentUser ? (
                   <SignInButton mode="modal">
                     <Button className="w-full mt-4">Follow</Button>
@@ -159,7 +167,6 @@ function ProfilePageClient({
                   </Button>
                 )}
 
-                {/* LOCATION & WEBSITE */}
                 <div className="w-full mt-6 space-y-2 text-sm">
                   {user.location && (
                     <div className="flex items-center text-muted-foreground">
@@ -192,12 +199,13 @@ function ProfilePageClient({
           </Card>
         </div>
 
+        {/* Tabs */}
         <Tabs defaultValue="posts" className="w-full">
           <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent">
             <TabsTrigger
               value="posts"
               className="flex items-center gap-2 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary
-               data-[state=active]:bg-transparent px-6 font-semibold"
+                px-6 font-semibold"
             >
               <FileTextIcon className="size-4" />
               Posts
@@ -205,7 +213,7 @@ function ProfilePageClient({
             <TabsTrigger
               value="likes"
               className="flex items-center gap-2 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary
-               data-[state=active]:bg-transparent px-6 font-semibold"
+                px-6 font-semibold"
             >
               <HeartIcon className="size-4" />
               Likes
@@ -213,26 +221,35 @@ function ProfilePageClient({
           </TabsList>
 
           <TabsContent value="posts" className="mt-6">
-            <div className="space-y-6">
-              {posts.length > 0 ? (
-                posts.map((post) => <PostCard key={post.id} post={post} currentUserId={currentUserId} />)
-              ) : (
-                <div className="text-center py-8 text-muted-foreground">No posts yet</div>
-              )}
-            </div>
+            {posts.posts.length > 0 ? (
+              <ProfilePostFeed
+                initialPosts={posts.posts}
+                initialCursor={posts.nextCursor}
+                userId={user.id}
+                currentUserId={currentUserId}
+                type="posts"
+              />
+            ) : (
+              <div className="text-center py-8 text-muted-foreground">No posts yet</div>
+            )}
           </TabsContent>
 
           <TabsContent value="likes" className="mt-6">
-            <div className="space-y-6">
-              {likedPosts.length > 0 ? (
-                likedPosts.map((post) => <PostCard key={post.id} post={post} currentUserId={currentUserId} />)
-              ) : (
-                <div className="text-center py-8 text-muted-foreground">No liked posts to show</div>
-              )}
-            </div>
+            {likedPosts.posts.length > 0 ? (
+              <ProfilePostFeed
+                initialPosts={likedPosts.posts}
+                initialCursor={likedPosts.nextCursor}
+                userId={user.id}
+                currentUserId={currentUserId}
+                type="likes"
+              />
+            ) : (
+              <div className="text-center py-8 text-muted-foreground">No liked posts to show</div>
+            )}
           </TabsContent>
         </Tabs>
 
+        {/* Edit Profile Dialog */}
         <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
@@ -242,7 +259,6 @@ function ProfilePageClient({
               <div className="space-y-2">
                 <Label>Name</Label>
                 <Input
-                  name="name"
                   value={editForm.name}
                   onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
                   placeholder="Your name"
@@ -251,7 +267,6 @@ function ProfilePageClient({
               <div className="space-y-2">
                 <Label>Bio</Label>
                 <Textarea
-                  name="bio"
                   value={editForm.bio}
                   onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
                   className="min-h-[100px]"
@@ -261,7 +276,6 @@ function ProfilePageClient({
               <div className="space-y-2">
                 <Label>Location</Label>
                 <Input
-                  name="location"
                   value={editForm.location}
                   onChange={(e) => setEditForm({ ...editForm, location: e.target.value })}
                   placeholder="Where are you based?"
@@ -270,7 +284,6 @@ function ProfilePageClient({
               <div className="space-y-2">
                 <Label>Website</Label>
                 <Input
-                  name="website"
                   value={editForm.website}
                   onChange={(e) => setEditForm({ ...editForm, website: e.target.value })}
                   placeholder="Your personal website"
@@ -289,4 +302,3 @@ function ProfilePageClient({
     </div>
   );
 }
-export default ProfilePageClient;
