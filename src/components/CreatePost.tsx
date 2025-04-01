@@ -50,6 +50,11 @@ function CreatePost() {
         setSelectedFiles([]);
         setShowImageUpload(false);
         toast.success("Post created successfully");
+
+        // ✅ Dispatch new-post event
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("new-post", { detail: result.post }));
+        }
       }
     } catch (error) {
       console.error("Failed to create post:", error);

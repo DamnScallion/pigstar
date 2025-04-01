@@ -35,117 +35,73 @@ export async function getProfileByUsername(username: string) {
   }
 }
 
-export async function getUserPosts(userId: string) {
+
+export async function getUserPosts(userId: string, cursor?: string, limit = 10) {
   try {
     const posts = await prisma.post.findMany({
-      where: {
-        authorId: userId,
-      },
+      where: { authorId: userId },
+      take: limit + 1,
+      ...(cursor && {
+        skip: 1,
+        cursor: { id: cursor },
+      }),
+      orderBy: { createdAt: "desc" },
       include: {
-        author: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            image: true,
-          },
-        },
+        author: { select: { id: true, name: true, username: true, image: true } },
         comments: {
           include: {
-            author: {
-              select: {
-                id: true,
-                name: true,
-                username: true,
-                image: true,
-              },
-            },
+            author: { select: { id: true, name: true, username: true, image: true } },
           },
-          orderBy: {
-            createdAt: "asc",
-          },
+          orderBy: { createdAt: "asc" },
         },
-        likes: {
-          select: {
-            userId: true,
-          },
-        },
-        _count: {
-          select: {
-            likes: true,
-            comments: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
+        likes: { select: { userId: true } },
+        _count: { select: { likes: true, comments: true } },
       },
     });
 
-    return posts;
+    const hasMore = posts.length > limit;
+    const trimmed = hasMore ? posts.slice(0, -1) : posts;
+
+    return { posts: trimmed, nextCursor: hasMore ? trimmed[trimmed.length - 1].id : null };
   } catch (error) {
     console.error("Error fetching user posts:", error);
     throw new Error("Failed to fetch user posts");
   }
 }
 
-export async function getUserLikedPosts(userId: string) {
+export async function getUserLikedPosts(userId: string, cursor?: string, limit = 10) {
   try {
-    const likedPosts = await prisma.post.findMany({
-      where: {
-        likes: {
-          some: {
-            userId,
-          },
-        },
-      },
+    const liked = await prisma.post.findMany({
+      where: { likes: { some: { userId } } },
+      take: limit + 1,
+      ...(cursor && {
+        skip: 1,
+        cursor: { id: cursor },
+      }),
+      orderBy: { createdAt: "desc" },
       include: {
-        author: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            image: true,
-          },
-        },
+        author: { select: { id: true, name: true, username: true, image: true } },
         comments: {
           include: {
-            author: {
-              select: {
-                id: true,
-                name: true,
-                username: true,
-                image: true,
-              },
-            },
+            author: { select: { id: true, name: true, username: true, image: true } },
           },
-          orderBy: {
-            createdAt: "asc",
-          },
+          orderBy: { createdAt: "asc" },
         },
-        likes: {
-          select: {
-            userId: true,
-          },
-        },
-        _count: {
-          select: {
-            likes: true,
-            comments: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
+        likes: { select: { userId: true } },
+        _count: { select: { likes: true, comments: true } },
       },
     });
 
-    return likedPosts;
+    const hasMore = liked.length > limit;
+    const trimmed = hasMore ? liked.slice(0, -1) : liked;
+
+    return { posts: trimmed, nextCursor: hasMore ? trimmed[trimmed.length - 1].id : null };
   } catch (error) {
     console.error("Error fetching liked posts:", error);
     throw new Error("Failed to fetch liked posts");
   }
 }
+
 
 export async function updateProfile(formData: FormData) {
   try {

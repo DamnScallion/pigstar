@@ -24,7 +24,7 @@ async function ProfilePageServer({ params }: { params: { username: string } }) {
 
   if (!profileUser) notFound();
 
-  const [posts, likedPosts, isCurrentUserFollowing] = await Promise.all([
+  const [postsData, likedPostsData, isCurrentUserFollowing] = await Promise.all([
     getUserPosts(profileUser.id),
     getUserLikedPosts(profileUser.id),
     isFollowing(profileUser.id),
@@ -39,8 +39,8 @@ async function ProfilePageServer({ params }: { params: { username: string } }) {
       <div className="lg:col-span-6">
         <ProfilePageClient
           user={profileUser}
-          posts={posts}
-          likedPosts={likedPosts}
+          posts={postsData}
+          likedPosts={likedPostsData}
           isFollowing={isCurrentUserFollowing}
           currentUserId={currentUserId}
         />
