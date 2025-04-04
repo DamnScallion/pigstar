@@ -5,6 +5,7 @@ import Sidebar from "@/components/Sidebar";
 import WhoToFollow from "@/components/WhoToFollow";
 import CreatePost from "@/components/CreatePost";
 import PostFeed from "@/components/PostFeed";
+import UnAuthenticatedCard from "@/components/UnAuthenticatedCard";
 
 export default async function Home() {
   const user = await currentUser();
@@ -14,16 +15,22 @@ export default async function Home() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
       <div className="hidden lg:block lg:col-span-3">
-        <Sidebar />
+        {user && <Sidebar />}
       </div>
 
       <div className="lg:col-span-6">
-        {user && <CreatePost />}
-        <PostFeed initialPosts={posts} initialCursor={nextCursor} currentUserId={currentUserId} />
+        {user ? (
+          <>
+            <CreatePost />
+            <PostFeed initialPosts={posts} initialCursor={nextCursor} currentUserId={currentUserId} />
+          </>
+        ) : (
+          <UnAuthenticatedCard />
+        )}
       </div>
 
       <div className="hidden lg:block lg:col-span-3 sticky top-20">
-        <WhoToFollow />
+        {user && <WhoToFollow />}
       </div>
     </div>
   );
