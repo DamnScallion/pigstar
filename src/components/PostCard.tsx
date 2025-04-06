@@ -21,8 +21,8 @@ function PostCard({ post, currentUserId }: { post: Post; currentUserId: string |
   const [isCommenting, setIsCommenting] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
   const [hasLiked, setHasLiked] = useState(
-  Array.isArray(post.likes) && post.likes.some((like) => like.userId === currentUserId)
-);
+    Array.isArray(post.likes) && post.likes.some((like) => like.userId === currentUserId)
+  );
 
   const [optimisticLikes, setOptimisticLikes] = useState(post._count?.likes ?? 0);
 
@@ -55,9 +55,12 @@ function PostCard({ post, currentUserId }: { post: Post; currentUserId: string |
     try {
       setIsCommenting(true);
       const result = await createComment(post.id, newComment);
-      if (result?.success) {
+      if (result?.success && result.comment) {
         toast.success("Comment posted successfully");
         setNewComment("");
+        // Add the new comment to the top of the comments list
+        post.comments.unshift(result.comment);
+        setShowComments(true); // Ensure comments are visible
       }
     } catch (error) {
       toast.error("Failed to add comment");
@@ -112,28 +115,28 @@ function PostCard({ post, currentUserId }: { post: Post; currentUserId: string |
           {post.images && post.images.length > 0 && (
             <div
               className={`grid gap-4 ${post.images.length === 1
-                  ? 'grid-cols-1'
-                  : post.images.length === 2
-                    ? 'grid-cols-2'
-                    : post.images.length === 3
-                      ? 'grid-cols-3 grid-rows-2'
-                      : post.images.length === 4
-                        ? 'grid-cols-2'
-                        : post.images.length === 5
-                          ? 'grid-cols-4 grid-rows-2'
-                          : post.images.length === 6
-                            ? 'grid-cols-3 grid-rows-3'
-                            : 'grid-cols-3'
+                ? 'grid-cols-1'
+                : post.images.length === 2
+                  ? 'grid-cols-2'
+                  : post.images.length === 3
+                    ? 'grid-cols-3 grid-rows-2'
+                    : post.images.length === 4
+                      ? 'grid-cols-2'
+                      : post.images.length === 5
+                        ? 'grid-cols-4 grid-rows-2'
+                        : post.images.length === 6
+                          ? 'grid-cols-3 grid-rows-3'
+                          : 'grid-cols-3'
                 }`}
             >
               {post.images.map((image, index) => (
                 <Link key={index} href={`/post/${post.id}`} legacyBehavior>
                   <div
                     className={`rounded-lg overflow-hidden cursor-pointer ${(post.images.length === 3 && index === 0) ||
-                        (post.images.length === 5 && index === 0) ||
-                        (post.images.length === 6 && index === 0)
-                        ? 'row-span-2 col-span-2'
-                        : ''
+                      (post.images.length === 5 && index === 0) ||
+                      (post.images.length === 6 && index === 0)
+                      ? 'row-span-2 col-span-2'
+                      : ''
                       }`}
                   >
                     <img
@@ -204,30 +207,6 @@ function PostCard({ post, currentUserId }: { post: Post; currentUserId: string |
           {/* COMMENTS SECTION */}
           {showComments && (
             <div className="space-y-4 pt-4 border-t">
-              <div className="space-y-4">
-                {/* DISPLAY COMMENTS */}
-                {post.comments.map((comment) => (
-                  <div key={comment.id} className="flex space-x-3">
-                    <Avatar className="size-8 flex-shrink-0">
-                      <AvatarImage src={comment.author.image ?? "/avatar.png"} />
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                        <span className="font-medium text-sm">{comment.author.name}</span>
-                        <span className="text-sm text-muted-foreground">
-                          @{comment.author.username}
-                        </span>
-                        <span className="text-sm text-muted-foreground">·</span>
-                        <span className="text-sm text-muted-foreground">
-                          {formatDistanceToNow(new Date(comment.createdAt))} ago
-                        </span>
-                      </div>
-                      <p className="text-sm break-words">{comment.content}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
               {user ? (
                 <div className="flex space-x-3">
                   <Avatar className="size-8 flex-shrink-0">
@@ -235,6 +214,7 @@ function PostCard({ post, currentUserId }: { post: Post; currentUserId: string |
                   </Avatar>
                   <div className="flex-1">
                     <Textarea
+                      id="newComment"
                       placeholder="Write a comment..."
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
@@ -269,6 +249,28 @@ function PostCard({ post, currentUserId }: { post: Post; currentUserId: string |
                   </SignInButton>
                 </div>
               )}
+              <div className="space-y-4">
+                {post.comments.map((comment) => (
+                  <div key={comment.id} className="flex space-x-3">
+                    <Avatar className="size-8 flex-shrink-0">
+                      <AvatarImage src={comment.author.image ?? "/avatar.png"} />
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                        <span className="font-medium text-sm">{comment.author.name}</span>
+                        <span className="text-sm text-muted-foreground">
+                          @{comment.author.username}
+                        </span>
+                        <span className="text-sm text-muted-foreground">·</span>
+                        <span className="text-sm text-muted-foreground">
+                          {formatDistanceToNow(new Date(comment.createdAt))} ago
+                        </span>
+                      </div>
+                      <p className="text-sm break-all">{comment.content}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>

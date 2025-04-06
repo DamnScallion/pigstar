@@ -63,9 +63,12 @@ const PostPageClient = ({ post, currentUserId }: PostPageClientProps) => {
     try {
       setIsCommenting(true);
       const result = await createComment(post.id, newComment);
-      if (result?.success) {
+      if (result?.success && result.comment) {
         toast.success("Comment posted successfully");
         setNewComment("");
+        // Add the new comment to the top of the comments list
+        post.comments.unshift(result.comment);
+        setShowComments(true); // Ensure comments are visible
       }
     } catch (error) {
       toast.error("Failed to add comment");
@@ -256,6 +259,7 @@ const PostPageClient = ({ post, currentUserId }: PostPageClientProps) => {
                     </Avatar>
                     <div className="flex-1">
                       <Textarea
+                        id="newComment"
                         placeholder="Write a comment..."
                         value={newComment}
                         onChange={(e) => setNewComment(e.target.value)}

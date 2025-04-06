@@ -268,6 +268,16 @@ export async function createComment(postId: string, content: string) {
           authorId: userId,
           postId,
         },
+        include: {
+          author: {
+            select: {
+              name: true,
+              id: true,
+              username: true,
+              image: true,
+            },
+          },
+        },
       });
 
       // Create notification if commenting on someone else's post
