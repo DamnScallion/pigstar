@@ -1,9 +1,3 @@
-/// This is your Prisma schema file,
-/// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-/// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-/// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,25 +8,23 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  username  String   @unique
-  clerkId   String   @unique
-  name      String?
-  bio       String?
-  image     String?
-  location  String?
-  website   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  /// Relations
+  id                   String         @id @default(cuid())
+  email                String         @unique
+  username             String         @unique
+  clerkId              String         @unique
+  name                 String?
+  bio                  String?
+  image                String?
+  location             String?
+  website              String?
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
   comments             Comment[]
-  following            Follows[]      @relation("follower") /// users this user follows
-  followers            Follows[]      @relation("following") /// users who follow this user
+  following            Follows[]      @relation("follower")
+  followers            Follows[]      @relation("following")
   likes                Like[]
-  notificationsCreated Notification[] @relation("notificationCreator") /// notifications triggered by this user
-  notifications        Notification[] @relation("userNotifications") /// notifications received by this user
+  notificationsCreated Notification[] @relation("notificationCreator")
+  notifications        Notification[] @relation("userNotifications")
   posts                Post[]
 }
 
@@ -61,7 +53,7 @@ model Comment {
   post         Post           @relation(fields: [postId], references: [id], onDelete: Cascade)
   notification Notification[]
 
-  @@index([authorId, postId]) /// composite index for faster queries
+  @@index([authorId, postId])
 }
 
 model Like {
@@ -72,8 +64,8 @@ model Like {
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, postId]) /// unique constraint for likes
-  @@index([userId, postId]) /// composite index for faster queries
+  @@unique([userId, postId])
+  @@index([userId, postId])
 }
 
 model Follows {
@@ -83,8 +75,8 @@ model Follows {
   follower    User     @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
   following   User     @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
 
-  @@id([followerId, followingId]) /// composite primary key
-  @@index([followerId, followingId]) /// composite index for faster queries
+  @@id([followerId, followingId])
+  @@index([followerId, followingId])
 }
 
 model Notification {
@@ -101,7 +93,7 @@ model Notification {
   post      Post?            @relation(fields: [postId], references: [id], onDelete: Cascade)
   user      User             @relation("userNotifications", fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId, createdAt]) /// composite index for faster queries
+  @@index([userId, createdAt])
 }
 
 enum NotificationType {
