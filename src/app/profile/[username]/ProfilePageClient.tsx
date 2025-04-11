@@ -104,13 +104,8 @@ export default function ProfilePageClient({
   return (
     <div className="max-w-3xl mx-auto">
       <div className="mb-4">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => router.back()}
-          className="flex items-center gap-2"
-        >
-          <ArrowLeftIcon className="size-5" />
+        <Button variant="ghost" onClick={() => router.back()} className="flex items-center">
+          <ArrowLeftIcon className="size-4" />
           Back
         </Button>
       </div>

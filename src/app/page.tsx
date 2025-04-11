@@ -21,7 +21,7 @@ export default async function Home() {
       <div className="lg:col-span-6">
         {user ? (
           <>
-            <CreatePost />
+            {/* <CreatePost /> */}
             <PostFeed initialPosts={posts} initialCursor={nextCursor} currentUserId={currentUserId} />
           </>
         ) : (
