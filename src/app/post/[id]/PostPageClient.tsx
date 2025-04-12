@@ -11,8 +11,7 @@ import ImageGrid from "@/components/ImageGrid";
 import PostHeader from "@/components/PostHeader";
 import PostInteractions from "@/components/PostInteractions";
 import PostCommentSection from "@/components/PostCommentSection";
-
-type Post = Awaited<ReturnType<typeof getPostById>>;
+import { Post } from '@/types';
 
 interface PostPageClientProps {
   post: Post;
