@@ -1,18 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper/modules";
-import "swiper/swiper-bundle.css";
 import ImagePreviewDialog from "./ImagePreviewDialog";
+import Image from "next/image";
+import { getOptimizedCloudinaryUrl, getBlurredCloudinaryUrl } from "@/lib/utils";
+
 
 
 interface Props {
   images: string[];
 }
 
-const ImageGridWithDialog = ({ images }: Props) => {
+const ImageGrid = ({ images }: Props) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   if (!images || images.length === 0) return null;
@@ -45,9 +44,19 @@ const ImageGridWithDialog = ({ images }: Props) => {
           <div
             key={i}
             onClick={() => setSelectedIndex(i)}
-            className={`rounded-lg overflow-hidden cursor-pointer ${getImageClass(i)}`}
+            className={`relative rounded-lg overflow-hidden cursor-pointer ${getImageClass(i)}`}
           >
-            <img src={image} alt={`Post image ${i + 1}`} className="w-full h-full object-cover" style={{ aspectRatio: "1 / 1" }} />
+            <Image
+              src={getOptimizedCloudinaryUrl(image)}
+              alt={`Post image ${i + 1}`}
+              width={500}
+              height={500}
+              className="w-full h-full object-cover aspect-square"
+              priority={i === 0}
+              placeholder="blur"
+              blurDataURL={getBlurredCloudinaryUrl(image)}
+              unoptimized={false}
+            />
           </div>
         ))}
       </div>
@@ -62,4 +71,4 @@ const ImageGridWithDialog = ({ images }: Props) => {
   );
 };
 
-export default ImageGridWithDialog;
+export default ImageGrid;
