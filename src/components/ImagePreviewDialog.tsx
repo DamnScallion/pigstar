@@ -22,7 +22,7 @@ const ImagePreviewDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl p-0 bg-transparent border-none shadow-none">
+      <DialogContent className="max-w-3xl p-0 bg-transparent border-none shadow-none" aria-describedby={undefined}>
         <DialogHeader className="flex justify-between items-center mb-4">
           <DialogTitle className="text-secondary">View Image</DialogTitle>
         </DialogHeader>
