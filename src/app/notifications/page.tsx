@@ -79,9 +79,8 @@ function NotificationsPage() {
               <div className="p-4 text-center text-muted-foreground">No notifications yet</div>
             ) : (
               notifications.map((notification) => (
-                <Link href={`/post/${notification.post?.id}`} legacyBehavior>
+                <Link key={notification.id} href={`/post/${notification.post?.id}`} legacyBehavior>
                   <div
-                    key={notification.id}
                     className={`flex items-start gap-4 p-4 border-b hover:bg-muted/25 transition-colors cursor-pointer ${!notification.read ? "bg-muted/50" : ""
                       }`}
                   >
