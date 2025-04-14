@@ -1,6 +1,6 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { SignInButton, SignUpButton } from "@clerk/nextjs";
+import { SignInButton } from "@clerk/nextjs";
 import { Button } from "./ui/button";
 import { getUserByClerkId } from "@/actions/user.action";
 import Link from "next/link";
@@ -10,12 +10,10 @@ import { LinkIcon, MapPinIcon } from "lucide-react";
 
 const Sidebar = async () => {
   const authUser = await currentUser();
-  if (!authUser) return <UnAuthenticatedSidebar />;
+  if (!authUser) return null;
 
   const user = await getUserByClerkId(authUser.id);
   if (!user) return null;
-
-  console.log({user})
 
   return (
     <div className="sticky top-20">
@@ -62,7 +60,12 @@ const Sidebar = async () => {
               <div className="flex items-center text-muted-foreground">
                 <LinkIcon className="w-4 h-4 mr-2 shrink-0" />
                 {user.website ? (
-                  <a href={`${user.website}`} className="hover:underline truncate" target="_blank">
+                  <a
+                    href={user.website}
+                    className="hover:underline truncate"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     {user.website}
                   </a>
                 ) : (
@@ -79,6 +82,7 @@ const Sidebar = async () => {
 
 export default Sidebar;
 
+// ✨ Unauthenticated fallback UI
 const UnAuthenticatedSidebar = () => (
   <div className="sticky top-20">
     <Card>
@@ -90,15 +94,10 @@ const UnAuthenticatedSidebar = () => (
           Login to access your profile and connect with others.
         </p>
         <SignInButton mode="modal">
-          <Button className="w-full" variant="outline">
+          <Button className="w-full" variant="default">
             Login
           </Button>
         </SignInButton>
-        <SignUpButton mode="modal">
-          <Button className="w-full mt-2" variant="default">
-            Sign Up
-          </Button>
-        </SignUpButton>
       </CardContent>
     </Card>
   </div>

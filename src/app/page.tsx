@@ -3,7 +3,6 @@ import { getCurrentUserId } from "@/actions/user.action";
 import { currentUser } from "@clerk/nextjs/server";
 import Sidebar from "@/components/Sidebar";
 import WhoToFollow from "@/components/WhoToFollow";
-import CreatePost from "@/components/CreatePost";
 import PostFeed from "@/components/PostFeed";
 import UnAuthenticatedCard from "@/components/UnAuthenticatedCard";
 
@@ -20,10 +19,7 @@ export default async function Home() {
 
       <div className="lg:col-span-6">
         {user ? (
-          <>
-            {/* <CreatePost /> */}
-            <PostFeed initialPosts={posts} initialCursor={nextCursor} currentUserId={currentUserId} />
-          </>
+          <PostFeed initialPosts={posts} initialCursor={nextCursor} currentUserId={currentUserId} />
         ) : (
           <UnAuthenticatedCard />
         )}
