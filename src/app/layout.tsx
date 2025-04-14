@@ -53,11 +53,11 @@ export default async function RootLayout({
                   </div>
                 </div>
               </main>
-              <SpeedInsights />
             </div>
             <Toaster />
           </ClerkThemeProvider>
         </ThemeProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
