@@ -41,7 +41,7 @@ const DesktopNavbar = async () => {
         </>
       ) : (
         <SignInButton mode="modal">
-          <Button variant="default">Sign In</Button>
+          <Button variant="default">Login</Button>
         </SignInButton>
       )}
     </div>

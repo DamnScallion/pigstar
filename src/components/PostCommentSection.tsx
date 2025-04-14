@@ -74,7 +74,7 @@ const PostCommentSection = ({
           <SignInButton mode="modal">
             <Button variant="outline" className="gap-2">
               <LogInIcon className="size-4" />
-              Sign in to comment
+              Login to comment
             </Button>
           </SignInButton>
         </div>
