@@ -5,7 +5,7 @@ import Link from "next/link";
 import { PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const CreatePostButton = () => {
+function CreatePostButton() {
   const pathname = usePathname();
 
   // Hide button if path includes '/createpost'

@@ -75,6 +75,17 @@ export async function getCurrentUserId() {
 	return user.id;
 }
 
+export async function getCurrentUser() {
+	const { userId: clerkId } = await auth();
+	if (!clerkId) return null;
+
+	const user = await getUserByClerkId(clerkId);
+
+	if (!user) throw new Error("User not found");
+
+	return user;
+}
+
 export async function getRandomUsers() {
 	try {
 		const userId = await getCurrentUserId();

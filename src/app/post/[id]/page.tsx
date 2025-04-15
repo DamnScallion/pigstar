@@ -3,7 +3,6 @@ import { getPostById } from '@/actions/post.action';
 import { getCurrentUserId } from "@/actions/user.action";
 import PostPageClient from './PostPageClient';
 import Sidebar from '@/components/Sidebar';
-import { redirect } from "next/navigation";
 
 async function PostPageServer({ params }: { params: { id: string } }) {
   const post = await getPostById(params.id);
@@ -11,7 +10,6 @@ async function PostPageServer({ params }: { params: { id: string } }) {
   if (!post) notFound();
 
   const currentUserId = await getCurrentUserId();
-  if (!currentUserId) redirect("/");
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
