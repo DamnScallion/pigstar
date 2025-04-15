@@ -1,18 +1,14 @@
-import { currentUser } from "@clerk/nextjs/server";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { SignInButton } from "@clerk/nextjs";
 import { Button } from "./ui/button";
-import { getUserByClerkId } from "@/actions/user.action";
+import { getCurrentUser } from "@/actions/user.action";
 import Link from "next/link";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Separator } from "./ui/separator";
 import { LinkIcon, MapPinIcon } from "lucide-react";
 
 const Sidebar = async () => {
-  const authUser = await currentUser();
-  if (!authUser) return null;
-
-  const user = await getUserByClerkId(authUser.id);
+  const user = await getCurrentUser();
   if (!user) return null;
 
   return (

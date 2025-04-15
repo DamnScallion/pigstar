@@ -1,12 +1,9 @@
 import DesktopNavbar from "./DesktopNavbar";
 import MobileNavbar from "./MobileNavbar";
-import { currentUser } from "@clerk/nextjs/server";
 import CreatePostButton from "./CreatePostButton";
 import Logo from "./Logo";
 
-const Navbar = async () => {
-  const user = await currentUser();
-
+export default function Navbar() {
   return (
     <nav className="sticky top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
       <div className="max-w-7xl mx-auto px-4">
@@ -17,7 +14,7 @@ const Navbar = async () => {
           </div>
 
           {/* Center: Plus button */}
-          {user && <CreatePostButton />}
+          <CreatePostButton />
 
           {/* Right: Navigation */}
           <div className="flex items-center gap-4">
@@ -29,5 +26,3 @@ const Navbar = async () => {
     </nav>
   );
 };
-
-export default Navbar;
