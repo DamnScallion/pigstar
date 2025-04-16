@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { getCurrentUserId } from "./user.action";
+import { logger } from "@/lib/utils";
 
 export async function getNotifications() {
   try {
@@ -43,7 +44,7 @@ export async function getNotifications() {
 
     return notifications;
   } catch (error) {
-    console.error("Error fetching notifications:", error);
+    logger.error("Error fetching notifications:", error);
     throw new Error("Failed to fetch notifications");
   }
 }
@@ -63,7 +64,7 @@ export async function markNotificationsAsRead(notificationIds: string[]) {
 
     return { success: true };
   } catch (error) {
-    console.error("Error marking notifications as read:", error);
+    logger.error("Error marking notifications as read:", error);
     return { success: false };
   }
 }

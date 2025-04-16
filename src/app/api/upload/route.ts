@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import { NextResponse } from "next/server";
 import * as dotenv from "dotenv";
+import { logger } from "@/lib/utils";
 
 dotenv.config();
 
@@ -43,7 +44,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ urls });
   } catch (error) {
-    console.error("Upload failed:", error);
+    logger.error("Upload failed:", error);
     return NextResponse.json({ error: "Upload failed" }, { status: 500 });
   }
 }

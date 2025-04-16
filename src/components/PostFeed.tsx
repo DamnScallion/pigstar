@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import PostCard from "./PostCard";
 import PostSkeleton from "./PostSkeleton";
+import { logger } from "@/lib/utils";
 
 type PostFeedProps = {
   initialPosts: any[];
@@ -28,7 +29,7 @@ export default function PostFeed({ initialPosts, initialCursor, currentUserId }:
       setCursor(data.nextCursor);
       setHasMore(!!data.nextCursor);
     } catch (e) {
-      console.error("Failed to load more posts:", e);
+      logger.error("Failed to load more posts:", e);
     }
     setLoading(false);
   }, [cursor, hasMore, loading]);

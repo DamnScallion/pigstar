@@ -13,6 +13,7 @@ import { createPost } from "@/actions/post.action";
 import toast from "react-hot-toast";
 import ImageUpload from "./ImageUpload";
 import { uploadImageToCloudinary } from "@/lib/cloudinary-client";
+import { logger } from "@/lib/utils";
 
 function CreatePost() {
   const { user } = useUser();
@@ -63,7 +64,7 @@ function CreatePost() {
         router.push("/");
       }
     } catch (error) {
-      console.error("Failed to create post:", error);
+      logger.error("Failed to create post:", error);
       toast.error("Failed to create post");
     } finally {
       setIsPosting(false);
