@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import ImagePreviewDialog from "./ImagePreviewDialog";
+import ImageSwiperDialog from "./ImageSwiperDialog";
 import Image from "next/image";
 import { getOptimizedCloudinaryUrl, getBlurredCloudinaryUrl } from "@/lib/utils";
 
@@ -62,7 +62,7 @@ const ImageGrid = ({ images }: Props) => {
         ))}
       </div>
 
-      <ImagePreviewDialog
+      <ImageSwiperDialog
         images={images}
         open={selectedIndex !== null}
         initialIndex={selectedIndex ?? 0}

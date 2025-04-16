@@ -26,7 +26,7 @@ const PostInteractions = ({
   const { user } = useUser();
 
   return (
-    <div className="flex items-center pt-2 space-x-4">
+    <div className="flex items-center space-x-4">
       {user ? (
         <Button
           variant="ghost"
