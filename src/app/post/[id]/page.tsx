@@ -1,10 +1,9 @@
 import { notFound } from 'next/navigation';
 import { getPostById } from '@/actions/post.action';
 import { getCurrentUserId } from "@/actions/user.action";
-import PostPageClient from './PostPageClient';
-import Sidebar from '@/components/Sidebar';
+import PostPageClient from './page-client';
 
-async function PostPageServer({ params }: { params: { id: string } }) {
+export default async function PostPage({ params }: { params: { id: string } }) {
   const post = await getPostById(params.id);
 
   if (!post) notFound();
@@ -12,15 +11,10 @@ async function PostPageServer({ params }: { params: { id: string } }) {
   const currentUserId = await getCurrentUserId();
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      <div className="hidden lg:block lg:col-span-3">
-        <Sidebar />
-      </div>
+    <div className="grid grid-cols-1 lg:grid-cols-9 gap-6">
       <div className="lg:col-span-6">
         <PostPageClient post={post} currentUserId={currentUserId} />
       </div>
     </div>
   );
 }
-
-export default PostPageServer;

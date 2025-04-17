@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { auth, User } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { logger } from "@/lib/utils";
 
 export async function syncUser(user: User) {
   const userId = user.id;
@@ -124,7 +125,7 @@ export async function getRandomUsers() {
 
 		return randomUsers;
 	} catch (error) {
-		console.log("Error fetching random users", error);
+		logger.error("Error fetching random users", error);
 		return [];
 	}
 }
@@ -179,7 +180,7 @@ export async function toggleFollow(targetUserId: string) {
 		revalidatePath("/");
 		return { success: true };
 	} catch (error) {
-		console.log("Error in toggleFollow", error);
+		logger.error("Error in toggleFollow", error);
 		return { success: false, error: "Error toggling follow" };
 	}
 }

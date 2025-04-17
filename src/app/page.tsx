@@ -1,6 +1,5 @@
 import { getPosts } from "@/actions/post.action";
 import { getCurrentUserId } from "@/actions/user.action";
-import Sidebar from "@/components/Sidebar";
 import WhoToFollow from "@/components/WhoToFollow";
 import PostFeed from "@/components/PostFeed";
 import UnAuthenticatedCard from "@/components/UnAuthenticatedCard";
@@ -10,11 +9,7 @@ export default async function Home() {
   const currentUserId = await getCurrentUserId();
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      <div className="hidden lg:block lg:col-span-3">
-        {currentUserId && <Sidebar />}
-      </div>
-
+    <div className="grid grid-cols-1 lg:grid-cols-9 gap-6">
       <div className="lg:col-span-6">
         {currentUserId ? (
           <PostFeed initialPosts={posts} initialCursor={nextCursor} currentUserId={currentUserId} />

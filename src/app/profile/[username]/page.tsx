@@ -5,9 +5,8 @@ import {
   isFollowing,
 } from "@/actions/profile.action";
 import { notFound } from "next/navigation";
-import ProfilePageClient from "./ProfilePageClient";
 import { getCurrentUserId } from "@/actions/user.action";
-import Sidebar from "@/components/Sidebar";
+import ProfilePageClient from "./page-client";
 
 export async function generateMetadata({ params }: { params: { username: string } }) {
   const user = await getProfileByUsername(params.username);
@@ -19,7 +18,7 @@ export async function generateMetadata({ params }: { params: { username: string 
   };
 }
 
-async function ProfilePageServer({ params }: { params: { username: string } }) {
+export default async function ProfilePage({ params }: { params: { username: string } }) {
   const profileUser = await getProfileByUsername(params.username);
 
   if (!profileUser) notFound();
@@ -32,10 +31,7 @@ async function ProfilePageServer({ params }: { params: { username: string } }) {
   const currentUserId = await getCurrentUserId();
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      <div className="hidden lg:block lg:col-span-3">
-        <Sidebar />
-      </div>
+    <div className="grid grid-cols-1 lg:grid-cols-9 gap-6">
       <div className="lg:col-span-6">
         <ProfilePageClient
           user={profileUser}
@@ -48,4 +44,3 @@ async function ProfilePageServer({ params }: { params: { username: string } }) {
     </div>
   );
 }
-export default ProfilePageServer;

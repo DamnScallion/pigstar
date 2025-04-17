@@ -5,19 +5,19 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import "swiper/swiper-bundle.css";
 
-interface ImagePreviewDialogProps {
+interface ImageSwiperDialogProps {
   images: string[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
   initialIndex: number;
 }
 
-const ImagePreviewDialog = ({
+const ImageSwiperDialog = ({
   images,
   open,
   onOpenChange,
   initialIndex,
-}: ImagePreviewDialogProps) => {
+}: ImageSwiperDialogProps) => {
   if (!images || images.length === 0) return null;
 
   return (
@@ -49,4 +49,4 @@ const ImagePreviewDialog = ({
   );
 };
 
-export default ImagePreviewDialog;
+export default ImageSwiperDialog;

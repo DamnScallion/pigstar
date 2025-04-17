@@ -3,18 +3,19 @@
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Card, CardContent } from "./ui/card";
-import { Avatar, AvatarImage } from "./ui/avatar";
-import { Textarea } from "./ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Textarea } from "@/components/ui/textarea";
 import { ImageIcon, Loader2Icon, SendIcon, ArrowLeftIcon } from "lucide-react";
-import { Button } from "./ui/button";
-import { Progress } from "./ui/progress";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { createPost } from "@/actions/post.action";
 import toast from "react-hot-toast";
-import ImageUpload from "./ImageUpload";
+import ImageUpload from "@/components/ImageUpload";
 import { uploadImageToCloudinary } from "@/lib/cloudinary-client";
+import { logger } from "@/lib/utils";
 
-function CreatePost() {
+export default function CreatePostPageClient() {
   const { user } = useUser();
   const router = useRouter();
 
@@ -63,7 +64,7 @@ function CreatePost() {
         router.push("/");
       }
     } catch (error) {
-      console.error("Failed to create post:", error);
+      logger.error("Failed to create post:", error);
       toast.error("Failed to create post");
     } finally {
       setIsPosting(false);
@@ -145,5 +146,3 @@ function CreatePost() {
     </div>
   );
 }
-
-export default CreatePost;

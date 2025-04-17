@@ -21,3 +21,21 @@ export function getOptimizedCloudinaryUrl(imageUrl: string): string {
   if (!imageUrl.includes("/upload/")) return imageUrl;
   return imageUrl.replace("/upload/", "/upload/f_auto,q_auto/");
 }
+
+
+export const logger = {
+  info: (...args: any[]) => {
+    if (process.env.NODE_ENV !== "production") {
+      console.info("[INFO]", ...args);
+    }
+  },
+  warn: (...args: any[]) => {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("[WARN]", ...args);
+    }
+  },
+  error: (...args: any[]) => {
+    // Always log errors, even in production (or send to a service like Sentry)
+    console.error("[ERROR]", ...args);
+  },
+};

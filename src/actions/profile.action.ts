@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { getCurrentUserId } from "./user.action";
+import { logger } from "@/lib/utils";
 
 export async function getProfileByUsername(username: string) {
   try {
@@ -30,7 +31,7 @@ export async function getProfileByUsername(username: string) {
 
     return user;
   } catch (error) {
-    console.error("Error fetching profile:", error);
+    logger.error("Error fetching profile:", error);
     throw new Error("Failed to fetch profile");
   }
 }
@@ -64,7 +65,7 @@ export async function getUserPosts(userId: string, cursor?: string, limit = 10) 
 
     return { posts: trimmed, nextCursor: hasMore ? trimmed[trimmed.length - 1].id : null };
   } catch (error) {
-    console.error("Error fetching user posts:", error);
+    logger.error("Error fetching user posts:", error);
     throw new Error("Failed to fetch user posts");
   }
 }
@@ -97,7 +98,7 @@ export async function getUserLikedPosts(userId: string, cursor?: string, limit =
 
     return { posts: trimmed, nextCursor: hasMore ? trimmed[trimmed.length - 1].id : null };
   } catch (error) {
-    console.error("Error fetching liked posts:", error);
+    logger.error("Error fetching liked posts:", error);
     throw new Error("Failed to fetch liked posts");
   }
 }
@@ -126,7 +127,7 @@ export async function updateProfile(formData: FormData) {
     revalidatePath("/profile");
     return { success: true, user };
   } catch (error) {
-    console.error("Error updating profile:", error);
+    logger.error("Error updating profile:", error);
     return { success: false, error: "Failed to update profile" };
   }
 }
@@ -147,7 +148,7 @@ export async function isFollowing(userId: string) {
 
     return !!follow;
   } catch (error) {
-    console.error("Error checking follow status:", error);
+    logger.error("Error checking follow status:", error);
     return false;
   }
 }

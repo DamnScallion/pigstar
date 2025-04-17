@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUserId } from "./user.action";
 import { revalidatePath } from "next/cache";
 import cloudinary, { extractCloudinaryPublicId } from "@/lib/cloudinary";
+import { logger } from "@/lib/utils";
 
 export async function createPost(content: string, imageUrls: string[]) {
   try {
@@ -62,7 +63,7 @@ export async function createPost(content: string, imageUrls: string[]) {
     revalidatePath("/");
     return { success: true, post };
   } catch (error) {
-    console.error("Failed to create post:", error);
+    logger.error("Failed to create post:", error);
     return { success: false, error: "Failed to create post" };
   }
 }
@@ -125,7 +126,7 @@ export async function getPosts(cursor?: string, limit: number = 10) {
       nextCursor: hasMore ? trimmedPosts[trimmedPosts.length - 1].id : null,
     };
   } catch (error) {
-    console.log("Error in getPosts", error);
+    logger.error("Error in getPosts", error);
     throw new Error("Failed to fetch posts");
   }
 }
@@ -176,7 +177,7 @@ export async function getPostById(postId: string) {
 
     return post;
   } catch (error) {
-    console.error("Failed to fetch post by ID:", error);
+    logger.error("Failed to fetch post by ID:", error);
     return null;
   }
 }
@@ -240,7 +241,7 @@ export async function toggleLike(postId: string) {
     revalidatePath("/");
     return { success: true };
   } catch (error) {
-    console.error("Failed to toggle like:", error);
+    logger.error("Failed to toggle like:", error);
     return { success: false, error: "Failed to toggle like" };
   }
 }
@@ -299,7 +300,7 @@ export async function createComment(postId: string, content: string) {
     revalidatePath(`/`);
     return { success: true, comment };
   } catch (error) {
-    console.error("Failed to create comment:", error);
+    logger.error("Failed to create comment:", error);
     return { success: false, error: "Failed to create comment" };
   }
 }
@@ -332,7 +333,7 @@ export async function deletePost(postId: string) {
     revalidatePath("/");
     return { success: true };
   } catch (error) {
-    console.error("Failed to delete post:", error);
+    logger.error("Failed to delete post:", error);
     return { success: false, error: "Failed to delete post" };
   }
 }

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import PostCard from "@/components/PostCard";
 import PostSkeleton from "@/components/PostSkeleton";
+import { logger } from "@/lib/utils";
 
 type ProfilePostFeedProps = {
   initialPosts: any[];
@@ -36,7 +37,7 @@ export default function ProfilePostFeed({
       setCursor(data.nextCursor);
       setHasMore(!!data.nextCursor);
     } catch (e) {
-      console.error("Failed to load more", e);
+      logger.error("Failed to load more", e);
     }
     setLoading(false);
   }, [cursor, hasMore, loading, type, userId]);
