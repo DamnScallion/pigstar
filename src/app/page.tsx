@@ -1,4 +1,4 @@
-import { getPosts } from "@/actions/post.action";
+import { getPosts } from "@/features/post/actions";
 import { getCurrentUserId } from "@/actions/user.action";
 import WhoToFollow from "@/components/WhoToFollow";
 import PostFeed from "@/components/PostFeed";

@@ -1,16 +1,16 @@
 "use client";
 
 import { useState } from 'react';
-import { createComment, deletePost, toggleLike, getPostById } from "@/actions/post.action";
+import { createComment, deletePost, toggleLike } from "@/features/post/actions";
 import toast from "react-hot-toast";
 import { Card, CardContent } from "../../../components/ui/card";
 import { Button } from "../../../components/ui/button";
 import { ArrowLeftIcon } from "lucide-react";
 import { useRouter } from 'next/navigation';
-import ImageGrid from "@/components/ImageGrid";
-import PostHeader from "@/components/PostHeader";
-import PostInteractions from "@/components/PostInteractions";
-import PostCommentSection from "@/components/PostCommentSection";
+import PostImageGrid from "@/features/post/components/PostImageGrid";
+import PostHeader from "@/features/post/components/PostHeader";
+import PostInteractions from "@/features/post/components/PostInteractions";
+import PostCommentSection from "@/features/post/components/PostCommentSection";
 import { Post } from '@/types';
 
 interface PostPageClientProps {
@@ -104,7 +104,7 @@ const PostPageClient = ({ post, currentUserId }: PostPageClientProps) => {
 
             {/* IMAGE GRID WITH DIALOG */}
             {post.images && post.images.length > 0 && (
-              <ImageGrid images={post.images} />
+              <PostImageGrid images={post.images} />
             )}
 
             {post.content && (

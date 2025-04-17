@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import PostCard from "@/components/PostCard";
-import PostSkeleton from "@/components/PostSkeleton";
+import PostCard from '@/features/post/components/PostCard';
+import PostSkeleton from "@/features/post/components/PostSkeleton";
 import { logger } from "@/lib/utils";
 
 type ProfilePostFeedProps = {

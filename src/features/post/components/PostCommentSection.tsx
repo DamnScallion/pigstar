@@ -1,9 +1,9 @@
 "use client";
 
 import { SignInButton, useUser } from "@clerk/nextjs";
-import { Avatar, AvatarImage } from "./ui/avatar";
-import { Button } from "./ui/button";
-import { Textarea } from "./ui/textarea";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { LogInIcon, SendIcon } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
