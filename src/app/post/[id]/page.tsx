@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getPostById } from '@/features/post/actions';
+import { getPostById } from '@/actions/post.action';
 import { getCurrentUserId } from "@/actions/user.action";
 import PostPageClient from './page-client';
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "./ui/button";
 import { HeartIcon, MessageCircleIcon } from "lucide-react";
 import { SignInButton, useUser } from "@clerk/nextjs";
 

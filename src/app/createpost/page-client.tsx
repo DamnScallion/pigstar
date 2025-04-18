@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ImageIcon, Loader2Icon, SendIcon, ArrowLeftIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { createPost } from "@/features/post/actions";
+import { createPost } from "@/actions/post.action";
 import toast from "react-hot-toast";
 import ImageUpload from "@/components/ImageUpload";
 import { uploadImageToCloudinary } from "@/lib/cloudinary-client";

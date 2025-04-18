@@ -1,14 +1,14 @@
 "use client";
 
-import { createComment, toggleLike } from "@/features/post/actions";
+import { createComment, toggleLike, getPostById } from "@/actions/post.action";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "./ui/card";
 
-import PostHeader from './PostHeader';
-import PostImageGrid from './PostImageGrid';
-import PostInteractions from './PostInteractions';
-import PostCommentSection from './PostCommentSection';
+import PostHeader from "./PostHeader";
+import ImageGrid from "./ImageGrid";
+import PostInteractions from "./PostInteractions";
+import PostCommentSection from "./PostCommentSection";
 import { Post } from '@/types';
 
 interface PostCardProps {
@@ -16,7 +16,7 @@ interface PostCardProps {
   currentUserId: string | null;
 }
 
-const PostCard = ({ post, currentUserId }: PostCardProps) => {
+function PostCard({ post, currentUserId }: PostCardProps) {
   if (!post) return null;
   const [newComment, setNewComment] = useState("");
   const [isCommenting, setIsCommenting] = useState(false);
@@ -81,7 +81,7 @@ const PostCard = ({ post, currentUserId }: PostCardProps) => {
 
           {/* IMAGE GRID WITH DIALOG */}
           {post.images && post.images.length > 0 && (
-            <PostImageGrid images={post.images} />
+            <ImageGrid images={post.images} />
           )}
 
           {/* POST TEXT CONTENT */}

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getPosts } from "@/features/post/actions";
+import { getPosts } from "@/actions/post.action";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
