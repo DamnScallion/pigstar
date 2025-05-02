@@ -26,13 +26,11 @@ export const SkyBackground = () => {
   if (!mounted) return null;
 
   return (
-  <div
-    className={`pointer-events-none fixed inset-0 -z-10 transition-opacity duration-700 ${
-      visible ? "opacity-100" : "opacity-0"
-    } bg-gradient-to-b from-[#080e21] to-[#1b2735]`}
-  >
-      <StarField count={1200} clusters={10}/>
-  </div>
-);
-
+    <div
+      className={`pointer-events-none fixed inset-0 -z-10 transition-opacity duration-700 ${visible ? "opacity-100" : "opacity-0"
+        } bg-gradient-to-b from-[#080e21] to-[#1b2735]`}
+    >
+      <StarField count={999} clusters={9} />
+    </div>
+  );
 };
