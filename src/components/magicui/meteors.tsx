@@ -52,9 +52,7 @@ export const Meteors = ({
           )}
         >
           {/* Meteor Tail */}
-          <div className="pointer-events-none absolute top-1/2 -z-10 h-[1px] w-[300px] -translate-y-1/2 bg-gradient-to-r from-white/80 to-transparent blur-[0.5px]" />
-
-          {/* <div className="pointer-events-none absolute top-1/2 -z-10 h-px w-[100px] -translate-y-1/2 bg-gradient-to-r from-zinc-500 to-transparent" /> */}
+          <div className="pointer-events-none absolute top-1/2 -z-10 h-[1px] w-[200px] -translate-y-1/2 bg-gradient-to-r from-white/80 to-transparent blur-[0.5px]" />
         </span>
       ))}
     </>

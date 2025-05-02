@@ -2,6 +2,7 @@
 
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { StarField } from "./StarField";
 
 export const SkyBackground = () => {
   const { theme, systemTheme } = useTheme();
@@ -30,7 +31,7 @@ export const SkyBackground = () => {
       visible ? "opacity-100" : "opacity-0"
     } bg-gradient-to-b from-[#080e21] to-[#1b2735]`}
   >
-    <span className="absolute top-0 left-0 w-[1px] h-[1px] bg-stars" />
+      <StarField count={1200} clusters={10}/>
   </div>
 );
 

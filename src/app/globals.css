@@ -120,21 +120,6 @@
   .animate-fade-in {
     animation: fade-in 1s ease-out forwards;
   }
-
-  .bg-stars {
-    background: transparent;
-    width: 1px;
-    height: 1px;
-    box-shadow: 100px 200px #fff, 150px 300px #fff, 200px 100px #fff, 250px 400px #fff,
-      300px 150px #fff, 350px 250px #fff, 400px 350px #fff, 450px 180px #fff, 500px 220px #fff,
-      550px 370px #fff, 600px 90px #fff, 650px 160px #fff, 700px 310px #fff, 750px 130px #fff,
-      800px 260px #fff, 850px 290px #fff, 900px 70px #fff, 950px 190px #fff, 1000px 330px #fff,
-      1050px 120px #fff, 1100px 280px #fff, 1150px 350px #fff, 1200px 180px #fff, 1250px 300px #fff,
-      1300px 220px #fff, 1350px 150px #fff, 1400px 360px #fff, 1450px 270px #fff, 1500px 130px #fff,
-      1550px 320px #fff, 1600px 210px #fff, 1650px 390px #fff, 1700px 180px #fff, 1750px 300px #fff,
-      1800px 240px #fff;
-    animation: twinkle 3s infinite ease-in-out;
-  }
 }
 
 @keyframes twinkle {
@@ -145,4 +130,8 @@
   50% {
     opacity: 0.3;
   }
+}
+
+.animate-twinkle {
+  animation: twinkle 3s infinite ease-in-out;
 }
