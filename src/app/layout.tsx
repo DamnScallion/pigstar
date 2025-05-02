@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
+import { Meteors } from "@/components/magicui/meteors";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/context/ThemeProvider";
@@ -30,7 +31,7 @@ export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
-  }) {
+}) {
   const user = await currentUser();
   if (user) {
     await syncUser(user);
@@ -46,8 +47,11 @@ export default async function RootLayout({
         >
           <ClerkThemeProvider>
             <div className="min-h-screen">
+              <div className="pointer-events-none fixed inset-0 z-0">
+                <Meteors />
+              </div>
               <Navbar />
-              <main className="py-8">
+              <main className="py-8 relative z-10">
                 <div className="max-w-7xl mx-auto px-4">
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     <div className="hidden lg:block lg:col-span-3">
