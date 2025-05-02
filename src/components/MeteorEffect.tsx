@@ -6,23 +6,32 @@ import { Meteors } from "./magicui/meteors";
 
 export const MeteorEffect = () => {
   const { theme, systemTheme } = useTheme();
-  const [isClient, setIsClient] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
+    setMounted(true);
   }, []);
 
-  const resolvedTheme =
-    theme === "system" ? systemTheme : theme;
+  useEffect(() => {
+    const resolved =
+      theme === "system"
+        ? window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light"
+        : theme;
+    setVisible(resolved === "dark");
+  }, [theme, systemTheme]);
 
-  if (!isClient || resolvedTheme !== "dark") return null;
+  if (!mounted) return null;
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-0 opacity-0 animate-fade-in"
+      className={`pointer-events-none fixed inset-0 z-0 transition-opacity duration-700 ${
+        visible ? "opacity-100" : "opacity-0"
+      }`}
     >
       <Meteors />
     </div>
   );
 };
-

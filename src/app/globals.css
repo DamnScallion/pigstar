@@ -92,8 +92,11 @@
       transform: rotate(var(--angle)) translateX(0);
       opacity: 1;
     }
-    70% {
-      opacity: 1;
+    10% {
+      opacity: 0.8;
+    }
+    30% {
+      opacity: 0.4;
     }
     100% {
       transform: rotate(var(--angle)) translateX(-150vw);
