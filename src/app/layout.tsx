@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import { MeteorEffect } from "@/components/MeteorEffect";
+import { SkyBackground } from "@/components/SkyBackground";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/context/ThemeProvider";
@@ -47,6 +48,7 @@ export default async function RootLayout({
         >
           <ClerkThemeProvider>
             <div className="min-h-screen">
+              <SkyBackground />
               <MeteorEffect />
               <Navbar />
               <main className="py-8 relative z-10">
