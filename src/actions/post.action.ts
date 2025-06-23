@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import cloudinary, { extractCloudinaryPublicId } from "@/lib/cloudinary";
 import { logger } from "@/lib/utils";
 
-export async function createPost(content: string, imageUrls: string[]) {
+export async function createPost(content: string, imageUrls: string[], mood?: string | null) {
   try {
     const userId = await getCurrentUserId();
     if (!userId) return;
@@ -16,6 +16,7 @@ export async function createPost(content: string, imageUrls: string[]) {
         content,
         images: { set: imageUrls },
         authorId: userId,
+        mood: mood || null, // Add mood to the post
       },
     });
 

@@ -77,6 +77,7 @@ function PostCard({ post, currentUserId }: PostCardProps) {
             onDelete={async () => { }}
             showLinkButton
             postId={post.id}
+            mood={post.mood}
           />
 
           {/* IMAGE GRID WITH DIALOG */}

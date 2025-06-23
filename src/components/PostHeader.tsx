@@ -6,6 +6,7 @@ import { DeleteAlertDialog } from "./DeleteAlertDialog";
 import { formatDistanceToNow } from "date-fns";
 import { ExternalLinkIcon } from "lucide-react";
 import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
 
 interface PostHeaderProps {
   author: {
@@ -20,6 +21,7 @@ interface PostHeaderProps {
   onDelete: () => Promise<void>;
   showLinkButton?: boolean;
   postId?: string;
+  mood?: string | null;
 }
 
 const PostHeader = ({
@@ -30,6 +32,7 @@ const PostHeader = ({
   onDelete,
   showLinkButton,
   postId,
+  mood,
 }: PostHeaderProps) => {
   return (
     <div className="flex items-center space-x-3 sm:space-x-4">
@@ -54,15 +57,22 @@ const PostHeader = ({
               </Link>
             </div>
 
-            {showLinkButton && postId ? (
-              <Link href={`/post/${postId}`}>
-                <Button variant="ghost" size="icon" className="size-4 text-muted-foreground">
-                  <ExternalLinkIcon className="size-4" />
-                </Button>
-              </Link>
-            ) : currentUserId === author.id ? (
-              <DeleteAlertDialog isDeleting={isDeleting} onDelete={onDelete} />
-            ) : null}
+            <div className="flex items-center gap-2">
+              {mood && (
+                <Badge variant="outline" className="text-sm text-muted-foreground rounded-full">
+                  {mood}
+                </Badge>
+              )}
+              {showLinkButton && postId ? (
+                <Link href={`/post/${postId}`}>
+                  <Button variant="ghost" size="icon" className="size-4 text-muted-foreground">
+                    <ExternalLinkIcon className="size-4" />
+                  </Button>
+                </Link>
+              ) : currentUserId === author.id ? (
+                <DeleteAlertDialog isDeleting={isDeleting} onDelete={onDelete} />
+              ) : null}
+            </div>
 
           </div>
           <span className="text-sm text-muted-foreground">

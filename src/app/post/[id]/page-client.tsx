@@ -100,6 +100,7 @@ const PostPageClient = ({ post, currentUserId }: PostPageClientProps) => {
               currentUserId={currentUserId}
               isDeleting={isDeleting}
               onDelete={handleDeletePost}
+              mood={post.mood}
             />
 
             {/* IMAGE GRID WITH DIALOG */}
