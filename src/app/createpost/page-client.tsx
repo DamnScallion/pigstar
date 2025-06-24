@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import ImageUpload from "@/components/ImageUpload";
 import { uploadImageToCloudinary } from "@/lib/cloudinary-client";
 import { logger } from "@/lib/utils";
+import MoodDrawer from "@/components/MoodDrawer";
 
 export default function CreatePostPageClient() {
   const { user } = useUser();
@@ -24,6 +25,7 @@ export default function CreatePostPageClient() {
   const [showImageUpload, setShowImageUpload] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [selectedMood, setSelectedMood] = useState<string | null>(null);
 
   const handleSubmit = async () => {
     if (!content.trim() && selectedFiles.length === 0) return;
@@ -48,10 +50,12 @@ export default function CreatePostPageClient() {
         imageUrls = (await Promise.all(uploadPromises)).filter(Boolean);
       }
 
-      const result = await createPost(content, imageUrls);
+      // Include mood in the post creation
+      const result = await createPost(content, imageUrls, selectedMood);
       if (result?.success) {
         setContent("");
         setSelectedFiles([]);
+        setSelectedMood(null);
         setShowImageUpload(false);
         toast.success("Post created successfully");
 
@@ -117,6 +121,11 @@ export default function CreatePostPageClient() {
                   <ImageIcon className="size-4 mr-2" />
                   Photo
                 </Button>
+                <MoodDrawer 
+                  onMoodSelect={setSelectedMood} 
+                  selectedMood={selectedMood} 
+                  disabled={isPosting} 
+                />
               </div>
               <Button
                 className="flex items-center"
