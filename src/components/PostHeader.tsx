@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { DeleteAlertDialog } from "./DeleteAlertDialog";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, format, differenceInDays } from "date-fns";
 import { ExternalLinkIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -76,7 +76,10 @@ const PostHeader = ({
 
           </div>
           <span className="text-sm text-muted-foreground">
-            {formatDistanceToNow(new Date(createdAt))} ago
+            {differenceInDays(new Date(), new Date(createdAt)) < 1
+              ? `${formatDistanceToNow(new Date(createdAt))} ago`
+              : format(new Date(createdAt), 'yyyy-MM-dd HH:mm')
+            }
           </span>
         </div>
       </div>
