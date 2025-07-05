@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { SignInButton } from "@clerk/nextjs";
+import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import { Button } from "./ui/button";
 import { getCurrentUser } from "@/actions/user.action";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import { LinkIcon, MapPinIcon } from "lucide-react";
 
 const Sidebar = async () => {
   const user = await getCurrentUser();
-  if (!user) return null;
+  if (!user) return (<UnAuthenticatedSidebar />);
 
   return (
     <div className="sticky top-20">
@@ -94,6 +94,11 @@ const UnAuthenticatedSidebar = () => (
             Login
           </Button>
         </SignInButton>
+        <SignUpButton mode="modal">
+          <Button className="w-full mt-2" variant="outline">
+            Sign Up
+          </Button>
+        </SignUpButton>
       </CardContent>
     </Card>
   </div>

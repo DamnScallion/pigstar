@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { SignInButton } from "@clerk/nextjs";
+import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import { Button } from "./ui/button";
 
 const UnAuthenticatedCard = () => (
-  <div className="sticky top-20">
+  <div className="sticky top-20 max-w-xs mx-auto">
     <Card>
       <CardHeader>
         <CardTitle className="text-center text-xl font-semibold">Welcome Back!</CardTitle>
@@ -17,6 +17,11 @@ const UnAuthenticatedCard = () => (
             Login
           </Button>
         </SignInButton>
+        <SignUpButton mode="modal">
+          <Button className="w-full mt-2" variant="outline">
+            Sign Up
+          </Button>
+        </SignUpButton>
       </CardContent>
     </Card>
   </div>

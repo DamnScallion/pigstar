@@ -14,7 +14,8 @@ export default async function Home() {
         {currentUserId ? (
           <PostFeed initialPosts={posts} initialCursor={nextCursor} currentUserId={currentUserId} />
         ) : (
-          <UnAuthenticatedCard />
+          <PostFeed initialPosts={posts} initialCursor={nextCursor} currentUserId={currentUserId} />
+          // <UnAuthenticatedCard />
         )}
       </div>
 
